@@ -21,22 +21,22 @@ class AuthSpec extends Specification {
         //ログイン状態を定義
         Cache.set("User.SteamID", -1)
 
-        val Some(routeTo) = route(FakeRequest(GET, "/auth"))
+        val Some(result) = route(FakeRequest(GET, "/auth"))
 
         //ステータスコードが303である
-        status(routeTo) must equalTo(303)
+        status(result) must equalTo(303)
         //リダイレクト先チェック
-        redirectLocation(routeTo).mustEqual(Some("/"))
+        redirectLocation(result).mustEqual(Some("/"))
 
       }
 
       "ログアウト状態で認証トップページにアクセスし、ログインページへリダイレクトされることを確認する" in new WithApplication {
-        val Some(routeTo) = route(FakeRequest(GET, "/auth"))
+        val Some(result) = route(FakeRequest(GET, "/auth"))
 
         //ステータスコードが303である
-        status(routeTo) must equalTo(303)
+        status(result) must equalTo(303)
         //リダイレクト先チェック
-        redirectLocation(routeTo).mustEqual(Some("/auth/login"))
+        redirectLocation(result).mustEqual(Some("/auth/login"))
       }
 
     }
