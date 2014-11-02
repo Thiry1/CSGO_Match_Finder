@@ -8,3 +8,7 @@ version := "1.0"
 playScalaSettings
 
 play.Project.playScalaSettings ++ SassPlugin.sassSettings
+
+libraryDependencies ++= Seq(
+  cache
+)
