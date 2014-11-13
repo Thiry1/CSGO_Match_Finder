@@ -3,9 +3,15 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.index
+GET        /                                controllers.Application.index
+
+#認証
+GET        /auth                            controllers.Auth.index
+GET        /auth/login                      controllers.Auth.login
+GET        /auth/steamOpenIDCallback        controllers.Auth.steamOpenIDCallback
+
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.at(path="/public", file)
+GET        /assets/*file                    controllers.Assets.at(path="/public", file)
 
     
