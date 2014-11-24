@@ -10,5 +10,6 @@ playScalaSettings
 play.Project.playScalaSettings ++ SassPlugin.sassSettings
 
 libraryDependencies ++= Seq(
-  cache
+  cache,
+  "eu.inn" %% "play2memcached" % "0.1"
 )
