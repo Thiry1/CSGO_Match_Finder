@@ -9,5 +9,10 @@ object Application extends Controller {
     Ok(views.html.index("Your new application is ready."))
   }
 
-  def lobby = TODO
+  /**
+   * ロビーページ
+   */
+  def lobby = Action {
+    Ok(utils.Scalate.Template("lobby.jade").render(Map()))
+  }
 }
