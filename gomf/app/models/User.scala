@@ -10,7 +10,7 @@ object User {
    * ユーザーがログインしているかをチェックする
    * @return boolean ログインしていればtrueを、していなければfalseを返す
    */
-  def isLoggedIn : Boolean = Cache.get("User.SteamID") != None
+  def isLoggedIn(steamId: String) : Boolean = Cache.get(steamId + ".SteamID") != None
 
   /**
    * ユーザー情報をキャッシュに登録する
@@ -20,58 +20,54 @@ object User {
    * @param avatar アバターURL
    */
   def register(userName: String, steamId: String, profileUrl: String, avatar: String) = {
-    Cache.set("User.name", userName)
-    Cache.set("User.SteamID", steamId)
-    Cache.set("User.profileUrl", profileUrl)
-    Cache.set("User.avatar", avatar)
+    Cache.set(steamId + ".name", userName)
+    Cache.set(steamId + ".SteamID", steamId)
+    Cache.set(steamId + ".profileUrl", profileUrl)
+    Cache.set(steamId + ".avatar", avatar)
   }
 
   /**
    * ユーザー情報をキャッシュから削除する
    */
-  def logout() = {
-    Cache.remove("User.SteamID")
-    Cache.remove("User.name")
-    Cache.remove("User.profileUrl")
-    Cache.remove("User.avatar")
-  }
-
-
-  /**
-   * ユーザーのSteamIDを取得する
-   * @return String SteamID
-   */
-  def steamId: String = Cache.getOrElse("User.SteamID") {
-    "SteamId Not Found"
+  def logout(steamId: String) = {
+    Cache.remove(steamId + ".SteamID")
+    Cache.remove(steamId + ".name")
+    Cache.remove(steamId + ".profileUrl")
+    Cache.remove(steamId + ".avatar")
   }
 
   /**
    * ユーザー名を取得する
+   * @param steamId SteamID
    * @return String ユーザー名
    */
-  def name: String = Cache.getOrElse("User.name") {
+
+  def name(steamId: String): String = Cache.getOrElse(steamId + ".name") {
     "Name Not Found"
   }
 
   /**
    * ユーザーのプロフィールURLを取得する
+   * @param steamId SteamID
    * @return String URL
    */
-  def profileUrl: String = Cache.getOrElse("User.profileUrl") {
+  def profileUrl(steamId: String): String = Cache.getOrElse(steamId + ".profileUrl") {
     "profileUrl Not found"
   }
 
   /**
    * ユーザーのアバターのURLを取得する
+   * @param steamId SteamID
    * @return String URL
    */
-  def avatar: String = Cache.getOrElse("User.avatar") {
+  def avatar(steamId: String): String = Cache.getOrElse(steamId + ".avatar") {
     "Avatar Not Found"
   }
 
   /**
    * ユーザー情報一覧を取得する
+   * @param steamId SteamID
    * @return PlayerExpression ユーザー情報
    */
-  def info: PlayerExpression = PlayerExpression(this.steamId, this.name, this.profileUrl, this.avatar)
+  def info(steamId: String): PlayerExpression = PlayerExpression(steamId, this.name(steamId), this.profileUrl(steamId), this.avatar(steamId))
 }

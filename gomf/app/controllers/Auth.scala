@@ -18,14 +18,13 @@ object Auth extends Controller {
   /**
    * 認証トップページ。ログインしていればトップページへ、ログインしていなければログインページへ転送する
    */
-  def index = Action {
-    //ログインしていればトップページへリダイレクト
-    if( User.isLoggedIn ) {
-      Redirect(routes.Application.index.url)
+  def index = Action { implicit request =>
 
-    } else {
-      //認証ページへ転送
-      Redirect(routes.Auth.login.url)
+    session.get("steamId") match {
+      //ログインしていればトップページへリダイレクト
+      case Some(steamId) => Redirect(routes.Application.index)
+      //ログインしていなければログインページヘリダイレクト
+      case None => Redirect(routes.Auth.login)
     }
   }
 
@@ -52,16 +51,23 @@ object Auth extends Controller {
   /**
    * ログアウト処理
    */
-  def logout = Action {
-    //ユーザーがログインしていればログアウト処理
-    if( User.isLoggedIn ) {
-      Logger.info(s"[user logged out] name: %s SteamID: %s".format(User.name, User.steamId))
-      //ログアウト処理
-      User.logout()
+  def logout = Action { implicit request =>
+    session.get("steamId") match {
+      //ログイン済みである場合
+      case Some(steamId) => {
+        //ユーザーがログインしていればログアウト処理
+        if( User.isLoggedIn(steamId) ) {
+          Logger.info(s"[user logged out] name: %s SteamID: %s".format(User.name(steamId), steamId))
+          //キャッシュから処理
+          User.logout(steamId)
+        }
+      }
+      case None => {}
     }
 
-    //トップページへリダイレクト
-    Redirect(routes.Application.index)
+    //セッションを破棄しトップページへリダイレクト
+    Redirect(routes.Application.index).withNewSession
+
   }
 
   /**
@@ -79,8 +85,8 @@ object Auth extends Controller {
           //ユーザー情報をキャッシュ
           User.register(user.personname, user.steamid, user.profileurl, user.avatarfull)
 
-          //ロビーページヘ転送
-          Redirect(routes.Application.lobby.absoluteURL())
+          //ユーザーセッションを発行し、ロビーページヘ転送
+          Redirect(routes.Application.lobby).withSession("steamId" -> steamId)
         }
     }
     .recover {

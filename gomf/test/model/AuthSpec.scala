@@ -17,13 +17,13 @@ class AuthSpec extends Specification {
 
      "isLoggedIn" should {
        "ログインチェックをログアウト状態で呼び出してfalseが返ること" in new WithApplication {
-         User.isLoggedIn must beFalse
+         User.isLoggedIn("DUMMY_STEAM_ID") must beFalse
        }
 
        "ログインチェックをログイン状態で呼び出してtrueが返ること" in new WithApplication {
-         Cache.set("User.SteamID", -1)
-         User.isLoggedIn must beTrue
-         Cache.remove("User.SteamID")
+         Cache.set("DUMMY_STEAM_ID" + ".SteamID", -1)
+         User.isLoggedIn("DUMMY_STEAM_ID") must beTrue
+         Cache.remove("DUMMY_STEAM_ID" + ".SteamID")
        }
      }
 
