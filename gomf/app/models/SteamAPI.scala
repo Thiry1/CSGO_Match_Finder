@@ -11,8 +11,6 @@ import play.api.libs.concurrent.Execution.Implicits._
  */
 object SteamAPI {
 
-  implicit val steamReads = Json.reads[Player]
-
   /**
    * STEAM API KEY
    */
