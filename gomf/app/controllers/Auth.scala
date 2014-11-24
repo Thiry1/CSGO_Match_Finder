@@ -1,11 +1,13 @@
 package controllers
 
 import play.api.Logger
+import scala.concurrent.{ExecutionContext, Future}
+import ExecutionContext.Implicits.global
 //import play.api.libs.openid.OpenID
 import utils.OpenID
 import play.api.mvc._
-import models.User
-import play.api.libs.concurrent.Execution.Implicits._
+import models.{SteamAPI, User}
+
 
 
 
@@ -51,10 +53,24 @@ object Auth extends Controller {
    * Steam OpenIDのコールバック
    */
   def steamOpenIDCallback = Action.async { implicit request =>
-    OpenID.verifiedId.map(info => Ok(info.id))
+    OpenID.verifiedId.flatMap { info =>
+        // SteamのコールバックからSteamIDを抽出
+        val steamId = info.id.replace("http://steamcommunity.com/openid/id/", "")
+        //SteamIDを元にユーザー情報を取得
+        val userInfo: Future[models.Player] = SteamAPI.userInfo(steamId)
+        userInfo.map { user =>
+          Logger.info(s"[user logged in] name: %s SteamID: %s".format(user.personname, user.steamid))
+
+          //ユーザー情報をキャッシュ
+          User.register(user.personname, user.steamid, user.profileurl, user.avatar)
+
+          //ロビーページヘ転送
+          Redirect(routes.Application.lobby.absoluteURL())
+        }
+    }
     .recover {
       case t: Throwable =>
-        Logger.error("Steam Auth Callback Error" + t)
+        Logger.error("Steam Auth Callback Error:" + t)
         InternalServerError("Steam Auth Callback Error. Please try again later.")
     }
   }
