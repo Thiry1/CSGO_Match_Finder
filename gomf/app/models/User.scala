@@ -25,4 +25,53 @@ object User {
     Cache.set("User.profileUrl", profileUrl)
     Cache.set("User.avatar", avatar)
   }
+
+  /**
+   * ユーザー情報をキャッシュから削除する
+   */
+  def logout() = {
+    Cache.remove("User.SteamID")
+    Cache.remove("User.name")
+    Cache.remove("User.profileUrl")
+    Cache.remove("User.avatar")
+  }
+
+
+  /**
+   * ユーザーのSteamIDを取得する
+   * @return String SteamID
+   */
+  def steamId: String = Cache.getOrElse("User.SteamID") {
+    "SteamId Not Found"
+  }
+
+  /**
+   * ユーザー名を取得する
+   * @return String ユーザー名
+   */
+  def name: String = Cache.getOrElse("User.name") {
+    "Name Not Found"
+  }
+
+  /**
+   * ユーザーのプロフィールURLを取得する
+   * @return String URL
+   */
+  def profileUrl: String = Cache.getOrElse("User.profileUrl") {
+    "profileUrl Not found"
+  }
+
+  /**
+   * ユーザーのアバターのURLを取得する
+   * @return String URL
+   */
+  def avatar: String = Cache.getOrElse("User.avatar") {
+    "Avatar Not Found"
+  }
+
+  /**
+   * ユーザー情報一覧を取得する
+   * @return PlayerExpression ユーザー情報
+   */
+  def info: PlayerExpression = PlayerExpression(this.steamId, this.name, this.profileUrl, this.avatar)
 }
