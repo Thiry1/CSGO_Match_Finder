@@ -49,6 +49,9 @@ object Auth extends Controller {
 
   }
 
+  /**
+   * ログアウト処理
+   */
   def logout = Action {
     //ユーザーがログインしていればログアウト処理
     if( User.isLoggedIn ) {
