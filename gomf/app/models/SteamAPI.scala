@@ -41,12 +41,7 @@ object SteamAPI {
         (user(0) \ "avatar").as[String],
         (user(0) \ "avatarmedium").as[String],
         (user(0) \ "avatarfull").as[String],
-        (user(0) \ "personastate").as[Int],
-        (user(0) \ "primaryclanid").as[String],
-        (user(0) \ "timecreated").as[Int],
-        (user(0) \ "personastateflags").as[Int],
-        (user(0) \ "loccountrycode").as[String],
-        (user(0) \ "locstatecode").as[String]
+        (user(0) \ "personastate").as[Int]
       )
     }
 

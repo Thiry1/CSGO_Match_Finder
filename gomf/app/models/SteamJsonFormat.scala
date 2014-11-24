@@ -14,12 +14,7 @@ case class Player(steamid: String,
                   avatar: String,
                   avatarmedium: String,
                   avatarfull: String,
-                  personastate: Int,
-                  primaryclanid: String,
-                  timecreated: Int,
-                  personastateflags: Int,
-                  loccountrycode: String,
-                  locstatecode: String)
+                  personastate: Int)
 
 case class PlayerExpression(steamId: String,
                             name: String,
