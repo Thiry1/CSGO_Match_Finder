@@ -23,6 +23,7 @@ class AuthSpec extends Specification {
        "ログインチェックをログイン状態で呼び出してtrueが返ること" in new WithApplication {
          Cache.set("User.SteamID", -1)
          User.isLoggedIn must beTrue
+         Cache.remove("User.SteamID")
        }
      }
 
