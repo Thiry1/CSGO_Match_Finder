@@ -49,6 +49,18 @@ object Auth extends Controller {
 
   }
 
+  def logout = Action {
+    //ユーザーがログインしていればログアウト処理
+    if( User.isLoggedIn ) {
+      Logger.info(s"[user logged out] name: %s SteamID: %s".format(User.name, User.steamId))
+      //ログアウト処理
+      User.logout()
+    }
+
+    //トップページへリダイレクト
+    Redirect(routes.Application.index)
+  }
+
   /**
    * Steam OpenIDのコールバック
    */
