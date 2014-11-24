@@ -19,6 +19,7 @@ object SteamAPI {
   /**
    * SteamIDを元にユーザー情報を取得する
    * @return Future[Player] ユーザー情報
+   * @throws JsResultException
    */
   def userInfo(steamId: String): Future[Player] = {
     //SteamAPIのURL
