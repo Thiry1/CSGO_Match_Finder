@@ -39,7 +39,7 @@ class SteamAPISpec extends Specification {
           }
         }
       }
-      
+
     }
 
   }
