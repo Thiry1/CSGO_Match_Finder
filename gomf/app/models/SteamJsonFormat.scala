@@ -20,3 +20,8 @@ case class Player(steamid: String,
                   personastateflags: Int,
                   loccountrycode: String,
                   locstatecode: String)
+
+case class PlayerExpression(steamId: String,
+                            name: String,
+                            profileUrl: String,
+                            avatar: String)
