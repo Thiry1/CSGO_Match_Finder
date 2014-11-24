@@ -77,7 +77,7 @@ object Auth extends Controller {
           Logger.info(s"[user logged in] name: %s SteamID: %s".format(user.personname, user.steamid))
 
           //ユーザー情報をキャッシュ
-          User.register(user.personname, user.steamid, user.profileurl, user.avatar)
+          User.register(user.personname, user.steamid, user.profileurl, user.avatarfull)
 
           //ロビーページヘ転送
           Redirect(routes.Application.lobby.absoluteURL())
