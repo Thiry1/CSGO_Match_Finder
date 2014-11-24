@@ -17,6 +17,8 @@ class AuthSpec extends Specification {
 
      "isLoggedIn" should {
        "ログインチェックをログアウト状態で呼び出してfalseが返ること" in new WithApplication {
+         //ダミーデータを削除してログアウト状態にする
+         Cache.remove("DUMMY_STEAM_ID" + ".SteamID")
          User.isLoggedIn("DUMMY_STEAM_ID") must beFalse
        }
 
