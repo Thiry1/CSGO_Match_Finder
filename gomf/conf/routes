@@ -4,6 +4,8 @@
 
 # Home page
 GET        /                                controllers.Application.index
+#ロビー
+GET        /lobby                           controllers.Application.lobby
 
 #認証
 GET        /auth                            controllers.Auth.index
