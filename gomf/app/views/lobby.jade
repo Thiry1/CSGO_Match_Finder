@@ -1,3 +1,4 @@
+-@ val player: models.PlayerExpression
 !!! 5
 html(lang="ja")
   head
@@ -14,12 +15,95 @@ html(lang="ja")
   body
     .contents
       .tabs
-
         .playerInfo
-        
+          .tbl
+            .thumb
+              img(src="#{player.avatar}" width="70" height="70")
+            ////.thumb
+            .desc
+              a(href="#{player.profileUrl}" target="_blank") = player.name
+            ////.desc
+          ////.tbl
         ////.playerInfo
+        #friends
+          section
+            header
+              h1 Friends
+              #onlines 20 Online
+            .friendsListBox
+              ul#friendsList
+                - for(i <- 1 to 20){
+                li
+                  .player
+                    .thumb
+                      img(src="#{player.avatar}" width="60" height="60")
+                    ////.thumb
+                    .desc
+                      .name Thiry
+                      .status Online
+                    ////.desc
+                  ////.player
+                - }
+              ////#friendsList
+            ////.friendsListBox
+          ////section
+        ////#friends
       ////.tabs
-      .main
-
-      ////.main
+      #main
+        section
+          header
+            h1 Lobby
+          #lobby
+            ul#players
+              - for(i <- 1 to 5){
+              li
+                .thumb
+                  img(src="#{player.avatar}" width="80" height="80")
+                .name Thiry
+              - }
+            //#players
+            #lobbyChat
+              #view
+                p テキスト
+                p.notify 通知メッセージ
+                p.error エラーメッセージ
+                p.error エラーメッセージ
+                p.error エラーメッセージ
+                p.error エラーメッセージ
+                p.error エラーメッセージ
+                p.error エラーメッセージ
+                p.error エラーメッセージ
+                p.error エラーメッセージ
+                p.error エラーメッセージ
+                p.error エラーメッセージ
+                p.error エラーメッセージ
+                p.error エラーメッセージ
+                p.error エラーメッセージ
+                p.error エラーメッセージ
+              ////#view
+              form#lobbyChatInput
+                input(type="text" placeholder="メッセージを入力してEnterキーで送信")
+              ////form
+            ////#lobbyChat
+            #buttonControls
+              .ctl
+                button#mapSettings MAP設定
+                .desc de_dust2 de_inferno de_nuke de_dust2 de_inferno de_nuke de_dust2 de_inferno de_nuke de_dust2 de_inferno de_nuke
+              ////.ctl
+              .go
+                button#GO GO
+              ////.ctl
+            //#buttonControls
+          ////#lobby
+        ////section
+      ////#main
     ////.contents
+    ul#userMenu
+      li#steamProfLinker
+        a(href="javascript:void(0)" target="_blank") Steamプロフィール
+      li#inviteFriend ルームに招待
+      li#inviteChat チャット送信
+    ////.userMenu
+    script(src="/assets/javascripts/jquery-1.9.0.min.js")
+    script(src="/assets/javascripts/lobby.layout.js")
+    script(src="/assets/javascripts/lobby.action.js")

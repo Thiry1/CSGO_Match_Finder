@@ -1,0 +1,282 @@
+@charset "utf-8";
+
+//imports
+@import "./_var";
+@import "./_lib";
+
+$pageWidth: 1024px;
+$tabWidth: 300px;
+$mainWidth: $pageWidth - $tabWidth;
+
+$baseTextColor: #f7f7f8;
+
+body{
+  background:url("../images/bg.jpg") no-repeat;
+  background-position:center center;
+  background-attachment: fixed;
+  background-size: cover;
+}
+
+.contents{
+  width:$pageWidth;
+  margin:20px auto 0 auto;
+  @include clearfix;
+  .tabs{
+    width:$tabWidth;
+    float:left;
+    .playerInfo{
+      //background: #3d464d;
+      background: rgba(61, 70, 77, 0.9);
+      color: $baseTextColor;
+      padding:15px;
+      @include box-sizing;
+      a{
+        color: $baseTextColor;
+        text-decoration: none;
+      }
+      .tbl{
+        display:table;
+        width:100%;
+      }
+      .thumb{
+        width:90px;
+        display: table-cell;
+        vertical-align: top;
+      }//.thumb
+      .desc{
+        display: table-cell;
+        vertical-align: top;
+        //width:$tabWidth - 90px;
+        max-width: 1px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        a{
+          font-size:18px;
+          display: block;
+        }
+      }//.desc
+    }//.playerInfo
+
+    #friends{
+      margin:15px 0;
+
+      header{
+        //background: rgba(38, 50, 60, 0.6);
+        background: rgba(13, 25, 35, 0.9);
+        color:#8db1d7;
+        padding:5px 10px;
+        @include clearfix;
+        @include box-sizing;
+        h1{
+          width:100px;
+          float:left;
+          font-weight: bold;
+        }
+        #onlines{
+          width:$tabWidth - 120px;
+          float:left;
+          text-align:right;
+        }
+      }//header
+      .friendsListBox{
+        #friendsList{
+          overflow-x:scroll;
+          li{
+            border-bottom: 1px #12171c solid;
+            .player{
+              display: table;
+              width:100%;
+              background:rgba(13, 24, 35, 0.7);
+              .thumb{
+                width:70px;
+                display:table-cell;
+                vertical-align: middle;
+                padding:5px;
+                @include box-sizing;
+                img{
+                  vertical-align: middle;
+                }
+              }
+              .desc{
+                display:tabe-cell;
+                width:230px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                //word-break: break-all;
+                vertical-align: top;
+                padding:3px 10px;
+                @include box-sizing;
+                color:#62859d * 1.3;
+              }
+            }//.player
+            &:hover{
+              cursor:pointer;
+              background:rgba(255, 255, 255, 0.4);
+            }
+          }//li
+        }//#friendsList
+      }//.friendsListBox
+    }//#friends
+  }//.tabs
+  #main{
+    width:$mainWidth - 10px;
+    margin:0 0 0 10px;
+    float:left;
+    background:rgba(13, 24, 35, 0.7);
+    header{
+      background: rgba(13, 25, 35, 0.9);
+      color:#8db1d7;
+      padding:5px 10px;
+      h1{
+        font-weight: bold;
+      }
+    }//header
+    #lobby{
+      padding:20px;
+      @include box-sizing;
+      ul#players{
+        @include clearfix;
+        li{
+          width:126px;
+          overflow:hidden;
+          text-overflow: ellipsis;
+          color:#fff;
+          float:left;
+          text-align:center;
+          padding:20px 21px;
+          @include box-sizing;
+          background: #27313b;
+          border:2px #212a31 solid;
+          margin:0 10px 0 0;
+          &:last-child{
+            margin:0;
+          }
+          &:hover{
+            cursor:pointer;
+            background:#27313b * 1.2;
+          }
+        }
+      }//#players
+      #lobbyChat{
+        border:2px #121920 solid;
+        background:#27313b;
+        margin:20px 0;
+        @include box-sizing;
+        #view{
+          color:#fff;
+          padding:10px;
+          height:200px;
+          @include box-sizing;
+          overflow-x: scroll;
+          p{
+            &.notify{
+              color:#0f0;
+            }
+            &.error{
+              color:#f00;
+            }
+          }
+        }//#view
+        #lobbyChatInput{
+          input{
+            width:99%;
+          }
+        }//#lobbyChatInput
+      }//#lobbyChat
+      #buttonControls{
+        .ctl{
+          @include clearfix;
+          button{
+            display:block;
+            float:left;
+            width:200px;
+            border:none;
+            color:#eaedf0;
+            padding:5px 0;
+            margin:5px 0 0 0;
+            font-size:14px;
+            cursor:pointer;
+            background: #789dbb; /* Old browsers */
+            background: -moz-linear-gradient(top, #789dbb 0%, #385170 52%, #324762 100%); /* FF3.6+ */
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#789dbb), color-stop(52%,#385170), color-stop(100%,#324762)); /* Chrome,Safari4+ */
+            background: -webkit-linear-gradient(top, #789dbb 0%,#385170 52%,#324762 100%); /* Chrome10+,Safari5.1+ */
+            background: -o-linear-gradient(top, #789dbb 0%,#385170 52%,#324762 100%); /* Opera 11.10+ */
+            background: -ms-linear-gradient(top, #789dbb 0%,#385170 52%,#324762 100%); /* IE10+ */
+            background: linear-gradient(to bottom, #789dbb 0%,#385170 52%,#324762 100%); /* W3C */
+            &:hover{
+              background: #789dbb * 1.2; /* Old browsers */
+              background: -moz-linear-gradient(top, #789dbb * 1.2 0%, #385170 * 1.2 52%, #324762 * 1.2 100%); /* FF3.6+ */
+              background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#789dbb * 1.2), color-stop(52%,#385170 * 1.2), color-stop(100%,#324762 * 1.2)); /* Chrome,Safari4+ */
+              background: -webkit-linear-gradient(top, #789dbb * 1.2 0%,#385170 * 1.2 52%,#324762 * 1.2 100%); /* Chrome10+,Safari5.1+ */
+              background: -o-linear-gradient(top, #789dbb * 1.2 0%,#385170 * 1.2 52%,#324762 * 1.2 100%); /* Opera 11.10+ */
+              background: -ms-linear-gradient(top, #789dbb * 1.2 0%,#385170 * 1.2 52%,#324762 * 1.2 100%); /* IE10+ */
+              background: linear-gradient(to bottom, #789dbb * 1.2 0%,#385170 * 1.2 52%,#324762 * 1.2 100%); /* W3C */
+            }
+          }
+          .desc{
+            float:left;
+            width: 674 - 200px;
+            padding:0 0 0 20px;
+            @include box-sizing;
+            color:#789dbb;
+          }
+        }//.ctl
+        .go{
+          text-align: right;
+          button{
+            color:#a4dfa9;
+            font-size:18px;
+            width:200px;
+            border:none;
+            padding:10px 0;
+            cursor:pointer;
+            background: #35866c; /* Old browsers */
+            background: -moz-linear-gradient(top,  #35866c 0%, #26714e 52%, #206844 100%); /* FF3.6+ */
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#35866c), color-stop(52%,#26714e), color-stop(100%,#206844)); /* Chrome,Safari4+ */
+            background: -webkit-linear-gradient(top,  #35866c 0%,#26714e 52%,#206844 100%); /* Chrome10+,Safari5.1+ */
+            background: -o-linear-gradient(top,  #35866c 0%,#26714e 52%,#206844 100%); /* Opera 11.10+ */
+            background: -ms-linear-gradient(top,  #35866c 0%,#26714e 52%,#206844 100%); /* IE10+ */
+            background: linear-gradient(to bottom,  #35866c 0%,#26714e 52%,#206844 100%); /* W3C */
+            &:hover{
+              background: #35866c * 1.2; /* Old browsers */
+              background: -moz-linear-gradient(top,  #35866c * 1.2 0%, #26714e * 1.2 52%, #206844 * 1.2 100%); /* FF3.6+ */
+              background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#35866c * 1.2), color-stop(52%,#26714e * 1.2), color-stop(100%,#206844 * 1.2)); /* Chrome,Safari4+ */
+              background: -webkit-linear-gradient(top,  #35866c * 1.2 0%,#26714e * 1.2 52%,#206844 * 1.2 100%); /* Chrome10+,Safari5.1+ */
+              background: -o-linear-gradient(top,  #35866c * 1.2 0%,#26714e * 1.2 52%,#206844 * 1.2 100%); /* Opera 11.10+ */
+              background: -ms-linear-gradient(top,  #35866c * 1.2 0%,#26714e * 1.2 52%,#206844 * 1.2 100%); /* IE10+ */
+              background: linear-gradient(to bottom,  #35866c * 1.2 0%,#26714e * 1.2 52%,#206844 * 1.2 100%); /* W3C */
+            }
+          }
+        }
+      }//#buttonControls
+    }//#lobby
+  }//#main
+}//.contents
+
+//ユーザークリック時のメニュー
+#userMenu{
+  width:200px;
+  position:absolute;
+  top:0;
+  left:0;
+  background:#243343;
+  color:#85a1ba;
+  border:2px #466c94 solid;
+  display:none;
+  li{
+    cursor:pointer;
+    padding:5px 10px;
+    border-bottom:1px #293c50 solid;
+    @include box-sizing;
+    &:last-child{
+      border-bottom:none;
+    }
+    &:hover{
+      background:#243343 * 1.2;
+    }
+    a{
+      color:#85a1ba;
+      text-decoration:none;
+    }
+  }
+}
