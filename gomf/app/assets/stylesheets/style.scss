@@ -237,4 +237,48 @@ body{
       text-decoration:none;
     }
   }
-}
+}//#userMenu
+
+//マップ選択画面
+#mapSelector{
+  width:100%;
+  height:100%;
+  position: absolute;
+  z-index:9001;
+  top:0;
+  left:0;
+  display:none;
+  background: rgba(0, 0, 0, 0.3);
+  .box{
+    display: table;
+    width:100%;
+    height:100%;
+    margin:0 auto;
+
+    .window{
+      display:table-cell;
+      width:100%;
+      height:100%;
+      vertical-align: middle;
+      .inner{
+        background: #202a34;
+        width:$mainWidth;
+        margin:0 auto;
+        @include box-sizing;
+        header{
+          background: rgba(13, 25, 35, 0.9);
+          color:#8db1d7;
+          padding:5px 10px;
+          font-weight: bold;
+        }//header
+        footer{
+          text-align: right;
+          padding:10px;
+          button#mapOK{
+            @include btnGreen;
+          }
+        }
+      }//.inner
+    }//.window
+  }//.box
+}//#mapSelector
