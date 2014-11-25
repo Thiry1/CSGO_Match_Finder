@@ -67,19 +67,6 @@ html(lang="ja")
                 p テキスト
                 p.notify 通知メッセージ
                 p.error エラーメッセージ
-                p.error エラーメッセージ
-                p.error エラーメッセージ
-                p.error エラーメッセージ
-                p.error エラーメッセージ
-                p.error エラーメッセージ
-                p.error エラーメッセージ
-                p.error エラーメッセージ
-                p.error エラーメッセージ
-                p.error エラーメッセージ
-                p.error エラーメッセージ
-                p.error エラーメッセージ
-                p.error エラーメッセージ
-                p.error エラーメッセージ
               ////#view
               form#lobbyChatInput
                 input(type="text" placeholder="メッセージを入力してEnterキーで送信")
@@ -104,6 +91,18 @@ html(lang="ja")
       li#inviteFriend ルームに招待
       li#inviteChat チャット送信
     ////.userMenu
+    #mapSelector
+      .box
+        .window
+          section.inner
+            header MAP選択
+            footer
+              button#mapOK 決定
+            //footer
+          ////.inner
+        ////.window
+      ////.box
+    ////#mapSelector
     script(src="/assets/javascripts/jquery-1.9.0.min.js")
     script(src="/assets/javascripts/lobby.layout.js")
     script(src="/assets/javascripts/lobby.action.js")
