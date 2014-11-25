@@ -35,6 +35,29 @@ $(function(){
     };
 
     /**
+     * MAPメニュー
+     * @type {{}}
+     */
+    var MapMenu = {
+        //表示するメニューのエレメント
+        menuElement: $('#mapSelector'),
+        /**
+         * マップ選択画面を表示する
+         */
+        show: function() {
+            var self = this;
+            //マップ選択画面を表示
+            this.menuElement.show(1, function(){
+                //OKボタンを押した時
+                self.menuElement.find('#mapOK').one('click', function(){
+                    //メニューを閉じる
+                    self.menuElement.hide();
+                });
+            });
+        }
+    };
+
+    /**
      * フレンドリストクリック時にコールされる
      */
     $('ul#friendsList li').on('click', function() {
@@ -46,5 +69,12 @@ $(function(){
      */
     $('#lobby ul#players li').on('click', function() {
         Menu.show($(this));
+    });
+
+    /**
+     * MAP設定ボタンクリック時にコールされる
+     */
+    $('#mapSettings').on('click', function() {
+        MapMenu.show();
     });
 });
