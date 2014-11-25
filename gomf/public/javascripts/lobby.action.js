@@ -2,6 +2,10 @@
  * ロビーページのアクション関連
  */
 $(function(){
+    /**
+     * ユーザーメニュー
+     * @type {{element: (*|jQuery|HTMLElement), show: show}}
+     */
     var Menu = {
         //表示するメニューのエレメント
         element: $('#userMenu'),
@@ -9,7 +13,7 @@ $(function(){
          * メニューを表示する
          * @param target メニューを表示したい位置のエレメント
          */
-        show: function(target){
+        show: function(target) {
             /**
              * @var targetの位置
              */
@@ -23,27 +27,24 @@ $(function(){
                 'left': pos.left + (target.width() / 2)
             }).show(1, function() {
                 //メニュー以外をクリックした際にメニューを閉じる
-                $('html').one('click',function ()
-                {
+                $('html').one('click', function() {
                     self.element.hide();
                 });
             });
-
-
         }
     };
 
     /**
      * フレンドリストクリック時にコールされる
      */
-    $('ul#friendsList li').on('click', function(){
+    $('ul#friendsList li').on('click', function() {
         Menu.show($(this));
     });
 
     /**
      * ロビーのプレーヤー一覧クリック時にコールされる
      */
-    $('#lobby ul#players li').on('click', function(){
+    $('#lobby ul#players li').on('click', function() {
         Menu.show($(this));
     });
 });
