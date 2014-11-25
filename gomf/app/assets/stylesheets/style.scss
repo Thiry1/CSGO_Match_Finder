@@ -189,29 +189,8 @@ body{
           button{
             display:block;
             float:left;
-            width:200px;
-            border:none;
-            color:#eaedf0;
-            padding:5px 0;
             margin:5px 0 0 0;
-            font-size:14px;
-            cursor:pointer;
-            background: #789dbb; /* Old browsers */
-            background: -moz-linear-gradient(top, #789dbb 0%, #385170 52%, #324762 100%); /* FF3.6+ */
-            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#789dbb), color-stop(52%,#385170), color-stop(100%,#324762)); /* Chrome,Safari4+ */
-            background: -webkit-linear-gradient(top, #789dbb 0%,#385170 52%,#324762 100%); /* Chrome10+,Safari5.1+ */
-            background: -o-linear-gradient(top, #789dbb 0%,#385170 52%,#324762 100%); /* Opera 11.10+ */
-            background: -ms-linear-gradient(top, #789dbb 0%,#385170 52%,#324762 100%); /* IE10+ */
-            background: linear-gradient(to bottom, #789dbb 0%,#385170 52%,#324762 100%); /* W3C */
-            &:hover{
-              background: #789dbb * 1.2; /* Old browsers */
-              background: -moz-linear-gradient(top, #789dbb * 1.2 0%, #385170 * 1.2 52%, #324762 * 1.2 100%); /* FF3.6+ */
-              background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#789dbb * 1.2), color-stop(52%,#385170 * 1.2), color-stop(100%,#324762 * 1.2)); /* Chrome,Safari4+ */
-              background: -webkit-linear-gradient(top, #789dbb * 1.2 0%,#385170 * 1.2 52%,#324762 * 1.2 100%); /* Chrome10+,Safari5.1+ */
-              background: -o-linear-gradient(top, #789dbb * 1.2 0%,#385170 * 1.2 52%,#324762 * 1.2 100%); /* Opera 11.10+ */
-              background: -ms-linear-gradient(top, #789dbb * 1.2 0%,#385170 * 1.2 52%,#324762 * 1.2 100%); /* IE10+ */
-              background: linear-gradient(to bottom, #789dbb * 1.2 0%,#385170 * 1.2 52%,#324762 * 1.2 100%); /* W3C */
-            }
+            @include btnBlue;
           }
           .desc{
             float:left;
@@ -224,28 +203,7 @@ body{
         .go{
           text-align: right;
           button{
-            color:#a4dfa9;
-            font-size:18px;
-            width:200px;
-            border:none;
-            padding:10px 0;
-            cursor:pointer;
-            background: #35866c; /* Old browsers */
-            background: -moz-linear-gradient(top,  #35866c 0%, #26714e 52%, #206844 100%); /* FF3.6+ */
-            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#35866c), color-stop(52%,#26714e), color-stop(100%,#206844)); /* Chrome,Safari4+ */
-            background: -webkit-linear-gradient(top,  #35866c 0%,#26714e 52%,#206844 100%); /* Chrome10+,Safari5.1+ */
-            background: -o-linear-gradient(top,  #35866c 0%,#26714e 52%,#206844 100%); /* Opera 11.10+ */
-            background: -ms-linear-gradient(top,  #35866c 0%,#26714e 52%,#206844 100%); /* IE10+ */
-            background: linear-gradient(to bottom,  #35866c 0%,#26714e 52%,#206844 100%); /* W3C */
-            &:hover{
-              background: #35866c * 1.2; /* Old browsers */
-              background: -moz-linear-gradient(top,  #35866c * 1.2 0%, #26714e * 1.2 52%, #206844 * 1.2 100%); /* FF3.6+ */
-              background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#35866c * 1.2), color-stop(52%,#26714e * 1.2), color-stop(100%,#206844 * 1.2)); /* Chrome,Safari4+ */
-              background: -webkit-linear-gradient(top,  #35866c * 1.2 0%,#26714e * 1.2 52%,#206844 * 1.2 100%); /* Chrome10+,Safari5.1+ */
-              background: -o-linear-gradient(top,  #35866c * 1.2 0%,#26714e * 1.2 52%,#206844 * 1.2 100%); /* Opera 11.10+ */
-              background: -ms-linear-gradient(top,  #35866c * 1.2 0%,#26714e * 1.2 52%,#206844 * 1.2 100%); /* IE10+ */
-              background: linear-gradient(to bottom,  #35866c * 1.2 0%,#26714e * 1.2 52%,#206844 * 1.2 100%); /* W3C */
-            }
+            @include btnGreen;
           }
         }
       }//#buttonControls
