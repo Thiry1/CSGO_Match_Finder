@@ -96,6 +96,26 @@ html(lang="ja")
         .window
           section.inner
             header MAP選択
+            #mapList
+              ul#classicMap
+                - for( map <- List("dust2", "inferno", "nuke", "dust", "mill", "mirage", "cache", "blackgold", "castle", "mist", "overgrown", "overpass", "train")) {
+                li
+                  .mapBlock
+                    figure
+                      img(src="/assets/images/maps/#{map}.jpg" width="150" height="115")
+                      figurecaption
+                        |#{map}
+                        .check
+                          input(type="checkbox" class="mapCheckBox" checked)
+                          label
+                        ////.check
+                      //figurecaption
+                    ////figure
+                  ////.mapBlock
+                ////li
+                - }
+              ////ul
+            ////#mapList
             footer
               button#mapOK 決定
             //footer
