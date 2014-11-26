@@ -9,7 +9,6 @@ import scala.concurrent.Future
 import scala.util.control.Exception._
 import scala.util.matching.Regex
 import play.api.http.HeaderNames
-import play.api.libs.concurrent.PurePromise
 import play.api.libs.ws.WS.WSRequestHolder
 import java.net._
 import play.api.mvc.Request
@@ -117,8 +116,8 @@ private[utils] class OpenIDClient(ws: String => WSRequestHolder) {
         val server: Future[OpenIDServer] = discovery.discoverServer(id)
         server.flatMap(directVerification(queryString))(global)
       }
-      case (Some("cancel"), _) => PurePromise(throw Errors.AUTH_CANCEL)
-      case _ => PurePromise(throw Errors.BAD_RESPONSE)
+      case (Some("cancel"), _) => throw Errors.AUTH_CANCEL
+      case _ => throw Errors.BAD_RESPONSE
     }
   }
 
