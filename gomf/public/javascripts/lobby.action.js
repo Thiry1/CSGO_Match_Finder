@@ -148,6 +148,11 @@ $(function(){
      * ロビーのプレーヤー一覧クリック時にコールされる
      */
     $('#lobby ul#players li').on('click', function() {
+        //空のスロット(ユーザーがいないスロット)の場合はメニューを表示しない
+        if( $(this).text() === '' ) {
+            return;
+        }
+
         Menu.Lobby.show($(this));
     });
 
