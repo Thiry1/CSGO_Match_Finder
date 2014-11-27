@@ -212,7 +212,7 @@ body{
 }//.contents
 
 //ユーザークリック時のメニュー
-#userMenu{
+#userMenu, #lobbyMenu{
   width:200px;
   position:absolute;
   top:0;
@@ -237,7 +237,7 @@ body{
       text-decoration:none;
     }
   }
-}//#userMenu
+}//#userMenu, #lobbyMenu
 
 //マップ選択画面
 #mapSelector{
