@@ -3,6 +3,13 @@
  */
 $(function(){
     /**
+     * キューに必要なデータを格納
+     */
+    var queue = {
+        maps: []
+    };
+
+    /**
      * ユーザーメニュー
      * @type {{element: (*|jQuery|HTMLElement), show: show}}
      */
@@ -67,8 +74,6 @@ $(function(){
             menuElement: $('#mapSelector'),
             //選択されているマップの一覧を表示するエレメント
             shownElement: $('#selectedMapsList'),
-            //選択状態のマップ一覧
-            queueList: [],
             /**
              * マップ選択画面を表示する
              */
@@ -107,24 +112,24 @@ $(function(){
 
                 //選択されている状態ならqueueリストにマップ名を追加、選択されていなければqueueリストからマップ名を削除する
                 if( isSelected ) {
-                    this.queueList.push(mapName);
+                    queue.maps.push(mapName);
                     //figureにselectedクラスを付与
                     elem.children('.mapBlock').children('figure').addClass('selected');
                 } else {
-                    this.queueList.remove(mapName);
+                    queue.maps.remove(mapName);
                     //figureからselectedクラスを削除
                     elem.children('.mapBlock').children('figure').removeClass('selected');
                 }
 
                 //選択マップ一覧表示を更新
-                this.shownElement.text(this.queueList.join(" "));
+                this.shownElement.text(queue.maps.join(" "));
             },
             /**
              * マップの選択状態をリセットする
              */
             reset: function() {
                 //キューリストを空にする
-                this.queueList = [];
+                queue.maps = [];
 
                 //選択マップ一覧表示を更新
                 this.shownElement.text("");
