@@ -75,7 +75,7 @@ html(lang="ja")
             #buttonControls
               .ctl
                 button#mapSettings MAP設定
-                .desc de_dust2 de_inferno de_nuke de_dust2 de_inferno de_nuke de_dust2 de_inferno de_nuke de_dust2 de_inferno de_nuke
+                .desc#selectedMapsList
               ////.ctl
               .go
                 button#GO GO
@@ -117,12 +117,13 @@ html(lang="ja")
               ////ul
             ////#mapList
             footer
-              button#mapOK 決定
+              button#mapOK(type="submit") 決定
             //footer
           ////.inner
         ////.window
       ////.box
     ////#mapSelector
     script(src="/assets/javascripts/jquery-1.9.0.min.js")
+    script(src="/assets/javascripts/extension.js")
     script(src="/assets/javascripts/lobby.layout.js")
     script(src="/assets/javascripts/lobby.action.js")

@@ -41,6 +41,10 @@ $(function(){
     var MapMenu = {
         //表示するメニューのエレメント
         menuElement: $('#mapSelector'),
+        //選択されているマップの一覧を表示するエレメント
+        shownElement: $('#selectedMapsList'),
+        //選択状態のマップ一覧
+        queueList: [],
         /**
          * マップ選択画面を表示する
          */
@@ -54,6 +58,51 @@ $(function(){
                     self.menuElement.hide();
                 });
             });
+        },
+        /**
+         * マップの選択状態を切り替える
+         */
+        toggleSelect: function(elem) {
+            /**
+             * @var object 選択されたマップのチェックボックスエレメント
+             */
+            var map = elem.find('input.mapCheckBox');
+
+            /**
+             * @var String マップ名
+             */
+            var mapName = map.val();
+
+            //マップ選択状態を切り替える
+            map.prop('checked', !map.prop('checked'));
+
+            /**
+             * @var boolean マップが選択状態であればtrueが入る
+             */
+            var isSelected = map.prop('checked');
+
+            //選択されている状態ならqueueリストにマップ名を追加、選択されていなければqueueリストからマップ名を削除する
+            if( isSelected ) {
+                this.queueList.push(mapName);
+            } else {
+                this.queueList.remove(mapName);
+            }
+
+            //選択マップ一覧表示を更新
+            this.shownElement.text(this.queueList.join(" "));
+        },
+        /**
+         * マップの選択状態をリセットする
+         */
+        reset: function() {
+            //キューリストを空にする
+            this.queueList = [];
+
+            //選択マップ一覧表示を更新
+            this.shownElement.text("");
+
+            //チェックボックスを未チェック状態にする
+            this.menuElement.find('input.mapCheckBox').prop('checked', false);
         }
     };
 
@@ -77,4 +126,15 @@ $(function(){
     $('#mapSettings').on('click', function() {
         MapMenu.show();
     });
+
+    /**
+     * MAP選択時にコールされる
+     */
+    $('#mapList li').on('click', function() {
+        //マップの選択状態を切り替え
+        MapMenu.toggleSelect($(this));
+    });
+
+    //ブラウザキャッシュによってチェックボックスのチェック状態が保存されている場合があるので初期化
+    MapMenu.reset();
 });
