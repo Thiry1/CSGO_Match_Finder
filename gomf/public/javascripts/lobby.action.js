@@ -84,8 +84,12 @@ $(function(){
             //選択されている状態ならqueueリストにマップ名を追加、選択されていなければqueueリストからマップ名を削除する
             if( isSelected ) {
                 this.queueList.push(mapName);
+                //figureにselectedクラスを付与
+                elem.children('.mapBlock').children('figure').addClass('selected');
             } else {
                 this.queueList.remove(mapName);
+                //figureからselectedクラスを削除
+                elem.children('.mapBlock').children('figure').removeClass('selected');
             }
 
             //選択マップ一覧表示を更新
