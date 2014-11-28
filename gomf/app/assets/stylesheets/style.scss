@@ -80,7 +80,8 @@ body{
       }//header
       .friendsListBox{
         #friendsList{
-          overflow-x:scroll;
+          overflow-x:hidden;
+          overflow-y:scroll;
           li{
             border-bottom: 1px #12171c solid;
             .player{
@@ -168,7 +169,8 @@ body{
           padding:10px;
           height:200px;
           @include box-sizing;
-          overflow-x: scroll;
+          overflow-x:hidden;
+          overflow-y:scroll;
           p{
             &.notify{
               color:#0f0;
