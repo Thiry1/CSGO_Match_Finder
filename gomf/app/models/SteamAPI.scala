@@ -1,9 +1,8 @@
 package models
 
 import play.Play
-import play.api.libs.json.{JsArray, Json}
+import play.api.libs.json.{JsResultException, JsArray}
 import play.api.libs.ws.WS.WSRequestHolder
-import play.api.libs.ws.WS
 import scala.concurrent.Future
 import play.api.libs.concurrent.Execution.Implicits._
 /**
@@ -23,7 +22,7 @@ object SteamAPI {
    */
   def userInfo(steamId: String): Future[Player] = {
     //SteamAPIのURL
-    val holder : WSRequestHolder = WS.url("http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/")
+    val holder : WSRequestHolder = play.api.libs.ws.WS.url("http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/")
                                      .withQueryString(("key" -> STEAM_API_KEY), ("steamids" -> steamId))
 
     holder.get().map { response =>
