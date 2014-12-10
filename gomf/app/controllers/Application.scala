@@ -3,6 +3,7 @@ package controllers
 import play.api._
 import play.api.mvc._
 import models.User
+import collection._
 
 object Application extends Controller {
 
@@ -24,7 +25,7 @@ object Application extends Controller {
           case false => Redirect (routes.Application.index)
           case true => {
             val player = User.info(steamId)
-            val params = Map ('player -> player)
+            val params = immutable.Map ('player -> player)
             Ok(utils.Scalate.Template ("lobby.jade").render(params) )
           }
         }
