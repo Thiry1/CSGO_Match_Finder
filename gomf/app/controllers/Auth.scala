@@ -52,17 +52,14 @@ object Auth extends Controller {
    * ログアウト処理
    */
   def logout = Action { implicit request =>
-    session.get("steamId") match {
-      //ログイン済みである場合
-      case Some(steamId) => {
-        //ユーザーがログインしていればログアウト処理
-        if( User.isLoggedIn(steamId) ) {
-          Logger.info(s"[user logged out] name: %s SteamID: %s".format(User.name(steamId), steamId))
-          //キャッシュから処理
-          User.logout(steamId)
-        }
+
+    session.get("steamId") foreach { steamId =>
+      //ユーザーがログインしていればログアウト処理
+      if( User.isLoggedIn(steamId) ) {
+        Logger.info(s"[user logged out] name: %s SteamID: %s".format(User.name(steamId), steamId))
+        //キャッシュから処理
+        User.logout(steamId)
       }
-      case None => {}
     }
 
     //セッションを破棄しトップページへリダイレクト
