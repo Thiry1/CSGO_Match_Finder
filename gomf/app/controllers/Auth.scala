@@ -56,7 +56,7 @@ object Auth extends Controller {
     session.get("steamId") foreach { steamId =>
       //ユーザーがログインしていればログアウト処理
       if( User.isLoggedIn(steamId) ) {
-        Logger.info(s"[user logged out] name: %s SteamID: %s".format(User.name(steamId), steamId))
+        Logger.info(s"[user logged out] name: $User.name(steamId) SteamID: $User.name(steamId)")
         //キャッシュから処理
         User.logout(steamId)
       }
@@ -77,7 +77,7 @@ object Auth extends Controller {
         //SteamIDを元にユーザー情報を取得
         val userInfo: Future[models.Player] = SteamAPI.userInfo(steamId)
         userInfo.map { user =>
-          Logger.info(s"[user logged in] name: %s SteamID: %s".format(user.personname, user.steamid))
+          Logger.info(s"[user logged in] name: $user.personname SteamID: $user.steamid")
 
           //ユーザー情報をキャッシュ
           User.register(user.personname, user.steamid, user.profileurl, user.avatarfull)
