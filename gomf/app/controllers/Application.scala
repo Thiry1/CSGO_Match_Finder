@@ -30,8 +30,21 @@ object Application extends Controller {
           }
         }
       }
-
     }
   }
 
+  def socketJs = Action { implicit request =>
+    //routes.Application.room.webSocketURL()
+    Ok(views.js.socket(request)).as("text/javascript")
+  }
+
+  /**
+   * ルーム内のチャット等
+   */
+  def room = TODO
+
+  /**
+   * 試合募集キュー
+   */
+  def queue = TODO
 }
