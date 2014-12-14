@@ -93,4 +93,28 @@ object Auth extends Controller {
     }
   }
 
+  /**
+   * ログイン済みユーザーのユーザー情報を再取得する
+   */
+  def modify = Action.async { implicit request =>
+    session.get("steamId") match {
+      //ログインしていない場合トップページへリダイレクト
+      case None => Future(Redirect(routes.Auth.index))
+
+      case Some(steamId) => {
+        //SteamIDを元にユーザー情報を取得
+        val userInfo: Future[models.Player] = SteamAPI.userInfo(steamId)
+        userInfo.map { user =>
+          Logger.info(s"[user modified] name: $user.personname SteamID: $user.steamid")
+
+          //ユーザー情報をキャッシュ
+          User.register(user.personname, user.steamid, user.profileurl, user.avatarfull)
+
+          //ユーザーセッションを発行し、ロビーページヘ転送
+          Redirect(routes.Application.lobby).withSession("steamId" -> steamId)
+        }
+      }
+    }
+  }
+
 }
