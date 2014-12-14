@@ -8,8 +8,9 @@ GET        /                                controllers.Application.index
 GET        /room                            controllers.Application.room
 
 #ロビー
-GET        /lobby                           controllers.Application.lobby
-
+GET        /lobby                           controllers.Application.lobbyWithoutRoomId
+GET        /lobby/                          controllers.Application.lobbyWithoutRoomId
+GET        /lobby/:roomId                   controllers.Application.lobby(roomId: String)
 #認証
 GET        /auth                            controllers.Auth.index
 GET        /auth/login                      controllers.Auth.login
