@@ -9,7 +9,6 @@ GET        /room                            controllers.Application.room
 
 #ロビー
 GET        /lobby                           controllers.Application.lobbyWithoutRoomId
-GET        /lobby/                          controllers.Application.lobbyWithoutRoomId
 GET        /lobby/:roomId                   controllers.Application.lobby(roomId: String)
 #認証
 GET        /auth                            controllers.Auth.index
@@ -22,4 +21,4 @@ GET        /auth/modify                     controllers.Auth.modify
 GET        /assets/*file                    controllers.Assets.at(path="/public", file)
 
 #WebSocket制御用JS
-GET        /lobby.socket.js                 controllers.Application.socketJs
+GET        /lobby.socket.js/:roomId                 controllers.Application.socketJs(roomId: String)
