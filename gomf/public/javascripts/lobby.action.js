@@ -49,11 +49,29 @@ $(function(){
          */
         show: function(target, menu) {
             /**
+             * @var SteamプロフィールURL
+             */
+            var profileUrl = target.attr('data-profileUrl');
+
+            //SteamIDがない(空きスロット)の場合はメニューを表示しない
+            if( typeof profileUrl === 'undefined' || profileUrl === '' ) {
+                return;
+            }
+
+            /**
+             * SteamプロフィールURLのリンクエレメント
+             */
+            var steamProfileLinker = menu.children('#steamProfLinker').children('a');
+
+            /**
              * @var targetの位置
              */
             var pos = target.position();
 
             var self = this;
+
+            //プロフィールURLをバインド
+            steamProfileLinker .attr('href', profileUrl);
 
             //メニューの表示位置を設定し表示する
             menu.css({
