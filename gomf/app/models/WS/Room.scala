@@ -64,20 +64,33 @@ case class Room(roomId: String) extends Actor {
   private def appendMember(steamId: String) = {
     //ユーザー情報取得
     val user = User.info(steamId)
-    //ユーザー情報をメンバーリストに追加
-    this.memberList = this.memberList :+ JsObject(Seq(
+    val userObj = JsObject(Seq(
       "steamId"    -> JsString(steamId),
       "userName"   -> JsString(user.name),
       "profileUrl" -> JsString(user.profileUrl),
-      "avatar"     -> JsString(user.avatar)
-    ))
+      "avatar"     -> JsString(user.avatar))
+    )
 
-    Logger.debug("append:: " + this.memberList.toString())
+    this.memberList.contains(userObj) match {
+      //ルームにすでに参加している場合
+      case true => {
+        self ! abort(steamId, "すでにルームに参加しているため切断されました")
+      }
 
-    //メンバーリストを通知
-    self ! notifyMemberList()
-    //ユーザー接続を通知
-    self ! notifyJoin(user.name.toString())
+      case false => {
+        //ユーザー情報をメンバーリストに追加
+        this.memberList = this.memberList :+ userObj
+
+        Logger.debug("append:: " + this.memberList.toString())
+
+        //メンバーリストを通知
+        self ! notifyMemberList()
+        //ユーザー接続を通知
+        self ! notifyJoin(user.name.toString())
+      }
+    }
+
+
   }
 
   /**
@@ -149,6 +162,16 @@ case class Room(roomId: String) extends Actor {
    */
   private def sendChat(userName: String, text: String) = {
     val response = ChatResponse(userName, text).toJson
+    channel.push(response)
+  }
+
+  /**
+   * ユーザーに切断要求を出す
+   * @param steamId 切断対象ユーザーのSteamID
+   * @param reason 理由
+   */
+  private def abort(steamId: String, reason: String) = {
+    val response = AbortResponse(steamId, reason).toJson
     channel.push(response)
   }
 }

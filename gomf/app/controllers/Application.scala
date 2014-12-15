@@ -62,7 +62,14 @@ object Application extends Controller with ChatService {
    * WebSocket用のJSを返す
    */
   def socketJs(roomId: String) = Action { implicit request =>
-    Ok(views.js.socket(request, roomId)).as("text/javascript")
+    session.get("steamId") match {
+      //ログインしていない場合トップページへリダイレクト
+      case None => InternalServerError("Login Required")
+
+      case Some(steamId) => {
+        Ok(views.js.socket(request, roomId, steamId)).as("text/javascript")
+      }
+    }
   }
 
   /**

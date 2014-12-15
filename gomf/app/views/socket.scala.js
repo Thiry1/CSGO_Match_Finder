@@ -1,4 +1,4 @@
-@(implicit request: RequestHeader, roomId: String)
+@(implicit request: RequestHeader, roomId: String, steamId: String)
 
 /**
  * ロビーのwebsocket関連
@@ -8,6 +8,10 @@ $(function() {
 
 
     var lobbyWS = {
+        /**
+         * プレイヤーのSteamID
+         */
+        steamId: '@steamId',
         /**
          * プレイヤー一覧表示エリア
          */
@@ -73,9 +77,25 @@ $(function() {
                     lobbyWS.onMemberModified(data);
                 break;
 
+                case 'abort':
+                    lobbyWS.onAbort(data);
+                break;
+
                 default:
                     lobbyWS.onError("undefined event: " + data.event);
                 break;
+            }
+        },
+        /**
+         * アボート要求が発生した場合の処理
+         * @@param data
+         */
+        onAbort: function(data) {
+            //対象ユーザーが自分なら
+            if( data.steamId === this.steamId ) {
+                lobbyWS.onError(data.reason);
+                socket.close();
+                alert("ルームから切断されました。reason: " + data.reason);
             }
         },
         /**

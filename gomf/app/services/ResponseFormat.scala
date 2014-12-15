@@ -25,6 +25,17 @@ case class ErrorResponse(text: String) {
 }
 
 /**
+ * 強制切断要求レスポンスを生成
+ * @param steamId 切断対象ユーザーのSteamID
+ * @param reason 理由
+ */
+case class AbortResponse(steamId: String, reason: String) {
+  def toJson = {
+    Json.toJson(immutable.Map("event" -> "abort", "steamId" -> steamId, "reason" -> reason))
+  }
+}
+
+/**
  * ユーザー切断時のレスポンスを生成
  * @param userName ユーザー名
  */
