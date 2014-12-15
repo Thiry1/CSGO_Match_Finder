@@ -46,4 +46,12 @@
         layout.calc().apply();
     });
 
+    /**
+     * チャット表示領域にDOMが追加された際に一番下にスクロールする
+     */
+    $('#view').on('DOMNodeInserted', function() {
+        var element = $(this);
+        element.scrollTop(element.get(0).scrollHeight);
+    });
+
 })();
