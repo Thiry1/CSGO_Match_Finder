@@ -152,7 +152,17 @@ $(function() {
     };
 
     lobbyWS.textInputForm.on('submit', function() {
-       lobbyWS.sendMessage(lobbyWS.textInput.val());
+        /**
+         * @@var 入力されたメッセージ
+         */
+        var msg = lobbyWS.textInput.val();
+
+        //未入力時は送信しない
+        if( msg === '' ) {
+            return false;
+        }
+
+        lobbyWS.sendMessage(msg);
         //入力エリアの初期化
         lobbyWS.textInput.val('');
         //フォーム送信無効化
