@@ -34,8 +34,6 @@ object SteamAPI {
         (user(0) \ "communityvisibilitystate").as[Int],
         (user(0) \ "profilestate").as[Int],
         (user(0) \ "personaname").as[String],
-        (user(0) \ "lastlogoff").as[Int],
-        (user(0) \ "commentpermission").as[Int],
         (user(0) \ "profileurl").as[String],
         (user(0) \ "avatar").as[String],
         (user(0) \ "avatarmedium").as[String],
