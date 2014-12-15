@@ -60,7 +60,7 @@ object Auth extends Controller {
         val userName = User.name(steamId)
 
         Logger.info(s"[user logged out] name: $userName SteamID: $steamId")
-        
+
         //キャッシュから処理
         User.logout(steamId)
       }
