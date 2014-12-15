@@ -56,7 +56,11 @@ object Auth extends Controller {
     session.get("steamId") foreach { steamId =>
       //ユーザーがログインしていればログアウト処理
       if( User.isLoggedIn(steamId) ) {
-        Logger.info(s"[user logged out] name: $User.name(steamId) SteamID: $User.name(steamId)")
+        //ユーザー名取得
+        val userName = User.name(steamId)
+
+        Logger.info(s"[user logged out] name: $userName SteamID: $steamId")
+        
         //キャッシュから処理
         User.logout(steamId)
       }
@@ -83,7 +87,7 @@ object Auth extends Controller {
           User.register(user.personname, user.steamid, user.profileurl, user.avatarfull)
 
           //ユーザーセッションを発行し、ロビーページヘ転送
-          Redirect(routes.Application.lobby).withSession("steamId" -> steamId)
+          Redirect(routes.Application.lobby(steamId)).withSession("steamId" -> steamId)
         }
     }
     .recover {
@@ -111,7 +115,7 @@ object Auth extends Controller {
           User.register(user.personname, user.steamid, user.profileurl, user.avatarfull)
 
           //ユーザーセッションを発行し、ロビーページヘ転送
-          Redirect(routes.Application.lobby).withSession("steamId" -> steamId)
+          Redirect(routes.Application.lobby(steamId)).withSession("steamId" -> steamId)
         }
       }
     }
