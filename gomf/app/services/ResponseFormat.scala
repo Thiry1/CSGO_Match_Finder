@@ -59,7 +59,7 @@ case class NotifyJoinResponse(userName: String) {
  * メンバー一覧のレスポンスを生成
  * @param memberList メンバー一覧
  */
-case class memberListResponse(memberList: mutable.LinkedList[JsObject]) {
+case class MemberListResponse(memberList: mutable.LinkedList[JsObject]) {
   def toJson = {
     Json.obj(
       "event" -> "memberModified",

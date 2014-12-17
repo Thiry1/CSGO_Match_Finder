@@ -133,7 +133,7 @@ case class Room(roomId: String) extends Actor {
    * メンバーリストをルームに通知する
    */
   private def notifyMemberList() = {
-    val response = memberListResponse(this.memberList).toJson
+    val response = MemberListResponse(this.memberList).toJson
     channel.push(response)
   }
 
