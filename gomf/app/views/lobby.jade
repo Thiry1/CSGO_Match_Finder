@@ -1,5 +1,6 @@
 -@ val player: models.PlayerExpression
 -@ val roomId: String
+-@ val maps: Seq[String]
 !!! 5
 html(lang="ja")
   head
@@ -103,7 +104,7 @@ html(lang="ja")
             header MAP選択
             #mapList
               ul#classicMap
-                - for( map <- List("dust2", "inferno", "nuke", "dust", "mill", "mirage", "cache", "blackgold", "castle", "mist", "overgrown", "overpass", "train")) {
+                - for( map <- maps) {
                 li
                   .mapBlock
                     figure
@@ -133,3 +134,4 @@ html(lang="ja")
     script(src="/assets/javascripts/lobby.layout.js")
     script(src="/assets/javascripts/lobby.action.js")
     script(src="/lobby.socket.js/#{roomId}")
+    script(src="/lobby.queue.js/#{roomId}")
