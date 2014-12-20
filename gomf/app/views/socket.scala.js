@@ -6,7 +6,6 @@
 $(function() {
     var socket = new WebSocket('@routes.Application.room(roomId).webSocketURL()');
 
-
     var lobbyWS = {
         /**
          * プレイヤーのSteamID
@@ -36,6 +35,12 @@ $(function() {
             socket.send(JSON.stringify({
                 event: "getMaps"
             }));
+        },
+        /**
+         * WebSocket通信切断時にコールされる
+         */
+        onConnectionClosed: function() {
+            alert("サーバーとの通信が切断されました。ページを更新して再接続してください");
         },
         /**
          * メッセージの送信
@@ -115,6 +120,7 @@ $(function() {
          */
         onMapChange: function(maps) {
             $('#selectedMapsList').text(maps.join(" "));
+            window.queue.maps = maps;
         },
         /**
          * アボート要求が発生した場合の処理
@@ -224,6 +230,6 @@ $(function() {
     //websocketのレスポンス処理メソッドに紐付け
     socket.onmessage = lobbyWS.onReceive;
     socket.onopen = lobbyWS.onConnection;
-
+    socket.onclose = lobbyWS.onConnectionClosed;
     window.lobbyWS = lobbyWS;
 });
