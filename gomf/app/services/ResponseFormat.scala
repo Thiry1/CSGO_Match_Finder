@@ -1,6 +1,6 @@
 package services
 
-import play.api.libs.json.{JsObject, Json}
+import play.api.libs.json.{JsString, JsArray, JsObject, Json}
 import collection._
 
 /**
@@ -56,6 +56,19 @@ case class NotifyJoinResponse(userName: String) {
 }
 
 /**
+ * マップ一覧のレスポンスを生成
+ * @param maps マップ一覧
+ */
+case class NotifyMapListResponse(maps: JsArray) {
+  def toJson = {
+    JsObject(Seq(
+      "event" -> JsString("mapChange"),
+      "maps"  -> maps
+    ))
+  }
+}
+
+/**
  * メンバー一覧のレスポンスを生成
  * @param memberList メンバー一覧
  */
@@ -65,5 +78,15 @@ case class MemberListResponse(memberList: mutable.LinkedList[JsObject]) {
       "event" -> "memberModified",
       "user" -> Json.toJson(memberList)
     )
+  }
+}
+
+/**
+ * キューへの参加失敗時のレスポンスを生成
+ * @param reason 理由
+ */
+case class IgnoreQueueResponse(reason: String) {
+  def toJson = {
+    Json.toJson(immutable.Map("event" -> "ignoreQueue", "reason" -> reason))
   }
 }

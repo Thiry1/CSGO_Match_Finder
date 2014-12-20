@@ -1,7 +1,7 @@
 package models.WS
 
 import models.User
-import play.api.libs.json.{JsObject, JsValue, JsString}
+import play.api.libs.json.{JsArray, JsObject, JsValue, JsString}
 
 import scala.language.postfixOps
 import scala.concurrent.duration._
@@ -26,6 +26,8 @@ case class Leave(userName: String)
 case class NewMember(userName: String)
 case class Talk(userName: String, text: String)
 case class Joined(enumerator: Enumerator[JsValue])
+case class MapChange(maps: JsArray)
+case class GetMap()
 
 /**
  * ルーム内のWebSocketイベント制御
@@ -37,6 +39,9 @@ case class Room(roomId: String) extends Actor {
   //ルームのメンバー一覧
   private[this] var memberList = mutable.LinkedList.empty[JsObject]
 
+  //マップ一覧
+  private[this] var mapList = JsArray()
+
   /**
    * WebSocket受信時にルーティングする
    * @return {Iteratee, Enumerator}
@@ -46,6 +51,8 @@ case class Room(roomId: String) extends Actor {
     case Leave(steamId)      => removeMember(steamId)
     case NewMember(steamId)  => appendMember(steamId)
     case Talk(steamId, text) => sendChat(User.name(steamId), text)
+    case MapChange(maps)     => mapChange(maps)
+    case GetMap()            =>  notifyMap()
   }
 
   /**
@@ -127,6 +134,20 @@ case class Room(roomId: String) extends Actor {
         self ! notifyLeft(userName)
       }
     }
+  }
+
+  private def mapChange(maps: JsArray) = {
+    this.mapList = maps
+
+    self ! notifyMap
+  }
+
+  /**
+   * マップ一覧をルームに通知する
+   */
+  private def notifyMap() = {
+    val response = NotifyMapListResponse(this.mapList).toJson
+    channel.push(response)
   }
 
   /**

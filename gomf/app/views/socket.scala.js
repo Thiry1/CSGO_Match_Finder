@@ -29,12 +29,31 @@ $(function() {
          */
         textInput: $('#lobbyChatInput').children('input'),
         /**
+         * コネクション確立時にコールされる
+         */
+        onConnection: function() {
+            //ルームに設定されているマップ一覧を取得
+            socket.send(JSON.stringify({
+                event: "getMaps"
+            }));
+        },
+        /**
          * メッセージの送信
          */
         sendMessage: function(msg) {
             socket.send(JSON.stringify({
                 event: "message",
                 text: msg
+            }));
+        },
+        /**
+         * マップ変更の送信
+         * @@param maps マップ
+         */
+        sendMapChange: function(maps) {
+            socket.send(JSON.stringify({
+                event: 'mapChange',
+                maps: maps
             }));
         },
         /**
@@ -81,10 +100,21 @@ $(function() {
                     lobbyWS.onAbort(data);
                 break;
 
+                case 'mapChange':
+                    lobbyWS.onMapChange(data.maps);
+                break;
+
                 default:
                     lobbyWS.onError("undefined event: " + data.event);
                 break;
             }
+        },
+        /**
+         * マップ一覧更新時の処理
+         * @@param maps マップ一覧
+         */
+        onMapChange: function(maps) {
+            $('#selectedMapsList').text(maps.join(" "));
         },
         /**
          * アボート要求が発生した場合の処理
@@ -129,6 +159,8 @@ $(function() {
               //ユーザー名をバインド
               li.children('.name').text(user.userName);
             }
+            //queueのプレーヤー人数を更新
+            window.queue.modifyPlayerCount(users.length);
         },
         /**
          * ルーム内の誰かが接続時の処理
@@ -191,4 +223,7 @@ $(function() {
 
     //websocketのレスポンス処理メソッドに紐付け
     socket.onmessage = lobbyWS.onReceive;
+    socket.onopen = lobbyWS.onConnection;
+
+    window.lobbyWS = lobbyWS;
 });

@@ -13,7 +13,7 @@ import akka.util.Timeout
 import play.api.libs.iteratee._
 import play.api.libs.concurrent._
 import play.api.libs.concurrent.Execution.Implicits._
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{JsArray, JsValue, Json}
 
 import models.WS._
 import services._
@@ -48,7 +48,9 @@ class ChatRoomServiceImpl {
 
       //イベントの種類で分岐させ、レスポンスを生成
       event match {
-        case "message" => chatRoom ! Talk(steamId, (data \ "text").as[String])
+        case "message"   => chatRoom ! Talk(steamId, (data \ "text").as[String])
+        case "mapChange" => chatRoom ! MapChange((data \ "maps").as[JsArray])
+        case "getMaps"   => chatRoom ! GetMap()
       }
 
     } map { _ =>
