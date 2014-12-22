@@ -152,6 +152,14 @@ class MatchingQueue {
     mutable.Map.empty[String, mutable.Seq[String]]
   }
 
+  /**
+   * マッチングの実処理
+   * @param matchedRoom マッチング済みルームが格納されている
+   * @param remainingPlayer マッチングに必要な残り人数
+   * @param searchPlayerCount 何人グループのルームを検索するか
+   * @param isLooped 同じ値を敷居値を超えてループしている場合にtrueになる
+   * @return マッチング結果
+   */
   private[this] def find(matchedRoom: mutable.Map[String, mutable.Seq[String]], remainingPlayer: Int, searchPlayerCount: Int, isLooped: Boolean = false): mutable.Map[String, mutable.Seq[String]] = {
     var team1: mutable.Seq[String] = matchedRoom("team1")
     var team2: mutable.Seq[String] = matchedRoom("team2")
@@ -262,9 +270,15 @@ class MatchingQueue {
     }
   }
 
+  /**
+   * マッチング処理の呼び出しを行う
+   * @param matchedRoom マッチング結果
+   * @param remainingPlayer マッチングに必要な残り人数
+   * @return マッチング結果
+   */
   private[this] def findPlayer(matchedRoom: mutable.Map[String, mutable.Seq[String]], remainingPlayer: Int): mutable.Map[String, mutable.Seq[String]] = {
     Logger.debug("残りの必要人数:: " + remainingPlayer)
-    //残りの必要人数に応じて検索
+    //残りの必要人数に応じて検索(1チーム5人までなので、検索数が5より大きい場合は5に置き換えて検索処理を呼び出す)
     val searchPlayerCount = if( remainingPlayer >= 5 ) 5 else remainingPlayer
     find(matchedRoom, remainingPlayer, searchPlayerCount)
   }
