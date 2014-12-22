@@ -57,17 +57,31 @@ class MatchingQueue {
   }
 
   /**
+   * キューリストから指定されたルームIDを削除する
+   * @param roomId ルームID
+   */
+  private[this] def remove(roomId: String): Unit = {
+    this.solo   = this.solo diff Seq(roomId)
+    this.duo    = this.duo diff Seq(roomId)
+    this.triple = this.triple diff Seq(roomId)
+    this.quadra = this.quadra diff Seq(roomId)
+    this.penta  = this.penta diff Seq(roomId)
+  }
+
+  /**
    * マッチング参加処理
    * @param roomId ルームID
    * @param playerCount ルームにいるプレイヤー数
    * @return マッチング結果
    */
   def join(roomId: String, playerCount: Int): immutable.Map[String, Any] = {
-    //キューに参加させる
-    Logger.debug("マッチング参加:: roomId: " + roomId + " 人数: " + playerCount)
-    this.add(roomId, playerCount)
-    //マッチング処理
-    this.queuing
+    this.synchronized {
+      //キューに参加させる
+      Logger.debug("マッチング参加:: roomId: " + roomId + " 人数: " + playerCount)
+      this.add(roomId, playerCount)
+      //マッチング処理
+      this.queuing
+    }
   }
 
   /**
@@ -98,6 +112,13 @@ class MatchingQueue {
         //マッチングに成功しているか判定
         if( matchedRoom.nonEmpty ) {
           Logger.debug("マッチング完了")
+
+          //マッチングしたルームのルームID一覧を取得
+          val matchedRoomIdList = matchedRoom("team1") ++ matchedRoom("team2")
+          matchedRoomIdList foreach { roomId =>
+            //マッチングしたルームのルームIDをリストから削除
+            remove(roomId)
+          }
           //マッチングしたルームを返す
           immutable.Map("matchFound" -> true, "rooms" -> matchedRoom)
         } else {
