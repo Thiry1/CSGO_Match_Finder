@@ -20,7 +20,7 @@ class QueueSpec extends Specification {
   "Queue" should{
 
     "マッチング" should {
-/*
+
       "5人グループ2つを入れてマッチングされること" in new WithApplication {
         val queue = new services.MatchingQueue()
 
@@ -363,7 +363,7 @@ class QueueSpec extends Specification {
         rooms("team2").contains("thresh") must beTrue
         rooms("team2").contains("nasus") must beTrue
       }
-*/
+
       //3人グループ
       "3人グループ2つ、2人グループ2つを入れてマッチングされること" in new WithApplication {
         val queue = new services.MatchingQueue()
@@ -710,7 +710,7 @@ class QueueSpec extends Specification {
 
 
       //連続マッチング
-      /*"5人グループ4つを入れてマッチングが２回されること" in new WithApplication {
+      "5人グループ4つを入れてマッチングが２回されること" in new WithApplication {
         val queue = new services.MatchingQueue()
 
         //人が5人いるダミールームをマッチングに参加させる
@@ -736,7 +736,7 @@ class QueueSpec extends Specification {
         val rooms2 = matchResult4("rooms").asInstanceOf[Map[String, Seq[String]]]
         rooms2("team1").contains("ashe") must beTrue
         rooms2("team2").contains("draven") must beTrue
-      }*/
+      }
 
       //失敗
 
