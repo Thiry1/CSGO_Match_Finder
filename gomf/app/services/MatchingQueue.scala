@@ -205,14 +205,16 @@ class MatchingQueue {
             if (team1Remaining >= searchPlayerCount) {
               team1 = team1 :+ roomId
               this.team1CurrentAmount += searchPlayerCount
+              isRoomFound = true
             } else if (team2Remaining >= searchPlayerCount) {
               team2 = team2 :+ roomId
               this.team2CurrentAmount += searchPlayerCount
+              isRoomFound = true
             }
             //変更データを反映
             matchedRoom("team1") = team1
             matchedRoom("team2") = team2
-            isRoomFound = true
+
             //リスト内検索から抜ける
             breaker.break()
           }
@@ -224,6 +226,11 @@ class MatchingQueue {
       } else {
         remainingPlayer
       }
+
+      //残り人数の更新
+      this.searchedPlayerHistory = searchPlayerCount +: this.searchedPlayerHistory
+
+      Logger.debug("残りの必要人数:: " + currentRemainingPlayerCount)
 
       //次の検索人数を決定
       val nextSearchPlayerCount = if (isLooped && !isRoomFound) {
@@ -237,12 +244,7 @@ class MatchingQueue {
         searchPlayerCount
       }
 
-
       Logger.debug("次の検索人数:: " + nextSearchPlayerCount)
-      //残り人数の更新
-      this.searchedPlayerHistory = searchPlayerCount +: this.searchedPlayerHistory
-
-      Logger.debug("残りの必要人数:: " + currentRemainingPlayerCount)
 
       currentRemainingPlayerCount match {
 
