@@ -107,7 +107,7 @@ html(lang="ja")
                 - for( map <- maps) {
                 li
                   .mapBlock
-                    figure
+                    figure(id="#{map}")
                       img(src="/assets/images/maps/#{map}.jpg" width="150" height="115")
                       figurecaption
                         |#{map}

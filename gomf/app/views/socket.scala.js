@@ -119,7 +119,18 @@ $(function() {
          * @@param maps マップ一覧
          */
         onMapChange: function(maps) {
-            $('#selectedMapsList').text(maps.join(" "));
+            //マップの選択状態を無効化
+            var mapElement = window.menu.Map.menuElement;
+            mapElement.find('input[type=checkbox]').prop('checked', false);
+            mapElement.find('figure').removeClass('selected');
+            for(var i = 0, len = maps.length; i < len; i++) {
+                var map = mapElement.find('#' + maps[i]);
+                map.addClass('selected');
+                //マップを選択状態に
+                map.find('input[type=checkbox]').prop('checked', true)
+            }
+
+            window.menu.Map.shownElement.text(maps.join(" "));
             window.queue.maps = maps;
         },
         /**
