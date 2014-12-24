@@ -40,7 +40,7 @@ $(function() {
          * WebSocket通信切断時にコールされる
          */
         onConnectionClosed: function() {
-            alert("サーバーとの通信が切断されました。ページを更新して再接続してください");
+            lobbyWS.onError("サーバーとの通信が切断されました。ページを更新して再接続してください");
         },
         /**
          * メッセージの送信
