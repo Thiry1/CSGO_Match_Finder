@@ -60,7 +60,7 @@ class MatchingQueue {
    * キューリストから指定されたルームIDを削除する
    * @param roomId ルームID
    */
-  private[this] def remove(roomId: String): Unit = {
+  def remove(roomId: String): Unit = {
     this.solo   = this.solo diff Seq(roomId)
     this.duo    = this.duo diff Seq(roomId)
     this.triple = this.triple diff Seq(roomId)
