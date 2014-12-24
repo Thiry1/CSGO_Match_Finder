@@ -6,6 +6,7 @@
 GET        /                                controllers.Application.index
 #ルームのWebSocketアクセス先
 GET        /room/:roomId                    controllers.Application.room(roomId: String)
+GET        /queue/:roomId                    controllers.Application.queue(roomId: String)
 
 #ロビー
 GET        /lobby                           controllers.Application.lobbyWithoutRoomId
@@ -21,4 +22,5 @@ GET        /auth/modify                     controllers.Auth.modify
 GET        /assets/*file                    controllers.Assets.at(path="/public", file)
 
 #WebSocket制御用JS
-GET        /lobby.socket.js/:roomId                 controllers.Application.socketJs(roomId: String)
+GET        /lobby.socket.js/:roomId         controllers.Application.roomJs(roomId: String)
+GET        /lobby.queue.js/:roomId          controllers.Application.queueJs(roomId: String)
