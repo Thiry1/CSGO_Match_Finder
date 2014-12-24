@@ -1,5 +1,6 @@
 package controllers
 
+import play.api.Play
 import play.api.libs.iteratee.{Iteratee, Done, Input, Enumerator}
 import play.api.libs.json.{JsArray, JsString, JsObject, JsValue}
 import play.api.mvc._
@@ -11,7 +12,7 @@ import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 import collection._
 
-import services.ChatService
+import services.{ChatService, QueueService}
 
 object Application extends Controller with ChatService {
 
@@ -38,6 +39,7 @@ object Application extends Controller with ChatService {
    * ロビーページ
    */
   def lobby(roomId: String) = Action { implicit request =>
+    import play.api.Play.current
 
     session.get("steamId") match {
       //ログインしていない場合トップページへリダイレクト
@@ -49,19 +51,28 @@ object Application extends Controller with ChatService {
           case false => Redirect(routes.Auth.modify)
           case true => {
             val player = User.info(steamId)
-            val params = immutable.Map ('player -> player, 'roomId -> roomId)
-            Ok(utils.Scalate.Template ("lobby.jade").render(params) )
+            //コンフィグからマップ一覧を取得
+            Play.application.configuration.getStringList("csgo.maps") match {
+              case None => InternalServerError("マップ一覧ファイルの取得に失敗しました")
+
+              case Some(maps) => {
+                import scala.collection.JavaConverters._
+
+                val params = immutable.Map ('player -> player, 'roomId -> roomId, 'maps -> maps.asScala.toSeq)
+                Ok(utils.Scalate.Template ("lobby.jade").render(params) )
+              }
+            }
           }
         }
+
       }
     }
-
   }
 
   /**
-   * WebSocket用のJSを返す
+   * room用のJSを返す
    */
-  def socketJs(roomId: String) = Action { implicit request =>
+  def roomJs(roomId: String) = Action { implicit request =>
     session.get("steamId") match {
       //ログインしていない場合トップページへリダイレクト
       case None => InternalServerError("Login Required")
@@ -70,6 +81,13 @@ object Application extends Controller with ChatService {
         Ok(views.js.socket(request, roomId, steamId)).as("text/javascript")
       }
     }
+  }
+
+  /**
+   * queue用のJSを返す
+   */
+  def queueJs(roomId: String) = Action { implicit request =>
+    Ok(views.js.queue(request, roomId)).as("text/javascript")
   }
 
   /**
@@ -94,5 +112,7 @@ object Application extends Controller with ChatService {
   /**
    * 試合募集キュー
    */
-  def queue = TODO
+  def queue(roomId: String) = WebSocket.async[JsValue] { implicit request =>
+    QueueService.start(roomId)
+  }
 }
