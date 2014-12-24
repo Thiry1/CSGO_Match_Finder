@@ -6,8 +6,38 @@ $(function(){
      * キューに必要なデータを格納
      */
     var queue = {
-        maps: []
+        /**
+         * マッチング開始ボタン
+         */
+        toggleBtn: $('#GO'),
+        /**
+         * マップ
+         */
+        maps: [],
+        /**
+         * queueに参加する人数
+         */
+        playerCount: 0,
+        /**
+         * queueに参加する人数を変更
+         * @param num プレーヤー数
+         */
+        modifyPlayerCount: function(num) {
+            //キューを停止
+            window.queueWS.stop();
+
+            this.playerCount = num;
+        },
+        start: function() {
+            window.queueWS.start(this.playerCount, this.maps);
+        },
+        stop: function() {
+            window.queueWS.stop();
+        }
+
     };
+    //export
+    window.queue = queue;
 
     /**
      * ユーザーメニュー
@@ -101,6 +131,8 @@ $(function(){
                 this.menuElement.show(1, function(){
                     //OKボタンを押した時
                     self.menuElement.find('#mapOK').one('click', function(){
+                        //マップ変更をルームに通知
+                        window.lobbyWS.sendMapChange(queue.maps);
                         //メニューを閉じる
                         self.menuElement.hide();
                     });
@@ -192,6 +224,25 @@ $(function(){
         Menu.Map.toggleSelect($(this));
     });
 
+    /**
+     * キュー実行開始ボタンクリック時にコールされる
+     */
+    queue.toggleBtn.on('click', function() {
+        var btn = $(this);
+
+        if( btn.text() === 'GO') {
+            btn.text('CANCEL');
+            queue.start();
+        } else {
+            btn.text('GO');
+            queue.stop();
+        }
+
+    });
+
     //ブラウザキャッシュによってチェックボックスのチェック状態が保存されている場合があるので初期化
     Menu.Map.reset();
+
+    //export
+    window.menu = Menu;
 });
