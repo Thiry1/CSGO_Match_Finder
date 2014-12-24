@@ -41,30 +41,35 @@ object Application extends Controller with ChatService {
   def lobby(roomId: String) = Action { implicit request =>
     import play.api.Play.current
 
-    session.get("steamId") match {
-      //ログインしていない場合ログインページへリダイレクト
-      case None => Redirect(routes.Auth.loginWithRedirect(roomId))
+    roomId.matches("""^[0-9a-zA-Z]+$""") match {
+      case false => InternalServerError("ルームIDは半角英数字のみで構成してください")
+      case true  => {
+        session.get("steamId") match {
+          //ログインしていない場合ログインページへリダイレクト
+          case None => Redirect(routes.Auth.loginWithRedirect(roomId))
 
-      case Some(steamId) => {
-        User.isLoggedIn(steamId) match {
-          //ユーザーデータが見つからない場合はトップページへリダイレクト
-          case false => Redirect(routes.Auth.modify)
-          case true => {
-            val player = User.info(steamId)
-            //コンフィグからマップ一覧を取得
-            Play.application.configuration.getStringList("csgo.maps") match {
-              case None => InternalServerError("マップ一覧ファイルの取得に失敗しました")
+          case Some(steamId) => {
+            User.isLoggedIn(steamId) match {
+              //ユーザーデータが見つからない場合はトップページへリダイレクト
+              case false => Redirect(routes.Auth.modify)
 
-              case Some(maps) => {
-                import scala.collection.JavaConverters._
+              case true => {
+                val player = User.info(steamId)
+                //コンフィグからマップ一覧を取得
+                Play.application.configuration.getStringList("csgo.maps") match {
+                  case None => InternalServerError("マップ一覧ファイルの取得に失敗しました")
+                  //マップ取得に成功した場合はページを表示する
+                  case Some(maps) => {
+                    import scala.collection.JavaConverters._
 
-                val params = immutable.Map ('player -> player, 'roomId -> roomId, 'maps -> maps.asScala.toSeq)
-                Ok(utils.Scalate.Template ("lobby.jade").render(params) )
+                    val params = immutable.Map ('player -> player, 'roomId -> roomId, 'maps -> maps.asScala.toSeq)
+                    Ok(utils.Scalate.Template ("lobby.jade").render(params) )
+                  }
+                }
               }
             }
           }
         }
-
       }
     }
   }
