@@ -29,13 +29,33 @@ object Auth extends Controller {
   }
 
   /**
+   * ログイン後に指定されたルームへリダイレクトする
+   */
+  def loginWithRedirect(roomId: String) = Action.async { implicit request =>
+
+    OpenID.redirectURL(
+      "http://steamcommunity.com/openid",
+      routes.Auth.steamOpenIDCallback(roomId).absoluteURL(),
+      claimedId = Some("http://specs.openid.net/auth/2.0/identifier_select"),
+      realm = Some(routes.Application.index.absoluteURL())
+    )
+      .map(url => Redirect(url))
+      .recover {
+      case t: Throwable =>
+        Logger.error("Steam Auth Error" + t)
+        InternalServerError("Steam Auth Error. Please try again later.")
+    }
+
+  }
+
+  /**
    * ログインページを表示する
    */
   def login = Action.async { implicit request =>
 
     OpenID.redirectURL(
       "http://steamcommunity.com/openid",
-      routes.Auth.steamOpenIDCallback.absoluteURL(),
+      routes.Auth.steamOpenIDCallback("useSteamIdToLobbyName").absoluteURL(),
       claimedId = Some("http://specs.openid.net/auth/2.0/identifier_select"),
       realm = Some(routes.Application.index.absoluteURL())
     )
@@ -74,7 +94,7 @@ object Auth extends Controller {
   /**
    * Steam OpenIDのコールバック
    */
-  def steamOpenIDCallback = Action.async { implicit request =>
+  def steamOpenIDCallback(roomId: String) = Action.async { implicit request =>
     OpenID.verifiedId.flatMap { info =>
         // SteamのコールバックからSteamIDを抽出
         val steamId = info.id.replace("http://steamcommunity.com/openid/id/", "")
@@ -86,8 +106,14 @@ object Auth extends Controller {
           //ユーザー情報をキャッシュ
           User.register(user.personname, user.steamid, user.profileurl, user.avatarfull)
 
+          //リダイレクト先を決定。RoomID未指定ならばSteamIDをキーにルーム生成
+          val redirectTo = if( roomId == "useSteamIdToLobbyName" ) {
+            routes.Application.lobby(steamId)
+          } else {
+            routes.Application.lobby(roomId)
+          }
           //ユーザーセッションを発行し、ロビーページヘ転送
-          Redirect(routes.Application.lobby(steamId)).withSession("steamId" -> steamId)
+          Redirect(redirectTo).withSession("steamId" -> steamId)
         }
     }
     .recover {

@@ -3,24 +3,25 @@
 # ~~~~
 
 # Home page
-GET        /                                controllers.Application.index
+GET    /                                  controllers.Application.index
 #ルームのWebSocketアクセス先
-GET        /room/:roomId                    controllers.Application.room(roomId: String)
-GET        /queue/:roomId                    controllers.Application.queue(roomId: String)
+GET    /room/:roomId                      controllers.Application.room(roomId: String)
+GET    /queue/:roomId                     controllers.Application.queue(roomId: String)
 
 #ロビー
-GET        /lobby                           controllers.Application.lobbyWithoutRoomId
-GET        /lobby/:roomId                   controllers.Application.lobby(roomId: String)
+GET    /lobby                             controllers.Application.lobbyWithoutRoomId
+GET    /lobby/:roomId                     controllers.Application.lobby(roomId: String)
 #認証
-GET        /auth                            controllers.Auth.index
-GET        /auth/login                      controllers.Auth.login
-GET        /auth/logout                     controllers.Auth.logout
-GET        /auth/steamOpenIDCallback        controllers.Auth.steamOpenIDCallback
-GET        /auth/modify                     controllers.Auth.modify
+GET    /auth                              controllers.Auth.index
+GET    /auth/login                        controllers.Auth.login
+GET    /auth/login/:roomId                controllers.Auth.loginWithRedirect(roomId: String)
+GET    /auth/logout                       controllers.Auth.logout
+GET    /auth/steamOpenIDCallback/:roomId  controllers.Auth.steamOpenIDCallback(roomId: String)
+GET    /auth/modify                       controllers.Auth.modify
 
 # Map static resources from the /public folder to the /assets URL path
-GET        /assets/*file                    controllers.Assets.at(path="/public", file)
+GET    /assets/*file                      controllers.Assets.at(path="/public", file)
 
 #WebSocket制御用JS
-GET        /lobby.socket.js/:roomId         controllers.Application.roomJs(roomId: String)
-GET        /lobby.queue.js/:roomId          controllers.Application.queueJs(roomId: String)
+GET    /lobby.socket.js/:roomId           controllers.Application.roomJs(roomId: String)
+GET    /lobby.queue.js/:roomId            controllers.Application.queueJs(roomId: String)

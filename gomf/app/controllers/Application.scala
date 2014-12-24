@@ -43,7 +43,7 @@ object Application extends Controller with ChatService {
 
     session.get("steamId") match {
       //ログインしていない場合ログインページへリダイレクト
-      case None => Redirect(routes.Auth.login)
+      case None => Redirect(routes.Auth.loginWithRedirect(roomId))
 
       case Some(steamId) => {
         User.isLoggedIn(steamId) match {
