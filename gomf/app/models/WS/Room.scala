@@ -77,27 +77,33 @@ case class Room(roomId: String) extends Actor {
       "profileUrl" -> JsString(user.profileUrl),
       "avatar"     -> JsString(user.avatar))
     )
+    //ルームが満員でないかチェック
+    Logger.debug("this.memberList.length :: " + this.memberList.length)
+    this.memberList.length > 4 match {//これ以降の処理で値を追加するため、5人ルームなのに4で比較している
+      case true => self ! abort(steamId, "ルームが満員です")
 
-    this.memberList.contains(userObj) match {
-      //ルームにすでに参加している場合
-      case true => {
-        self ! abort(steamId, "すでにルームに参加しているため切断されました")
-      }
-
+      //ルームに空きがあれば
       case false => {
-        //ユーザー情報をメンバーリストに追加
-        this.memberList = this.memberList :+ userObj
+        this.memberList.contains(userObj) match {
+          //ルームにすでに参加している場合
+          case true => {
+            self ! abort(steamId, "すでにルームに参加しているため切断されました")
+          }
 
-        Logger.debug("append:: " + this.memberList.toString())
+          case false => {
+            //ユーザー情報をメンバーリストに追加
+            this.memberList = this.memberList :+ userObj
 
-        //メンバーリストを通知
-        self ! notifyMemberList()
-        //ユーザー接続を通知
-        self ! notifyJoin(user.name.toString())
+            Logger.debug("append:: " + this.memberList.toString())
+
+            //メンバーリストを通知
+            self ! notifyMemberList()
+            //ユーザー接続を通知
+            self ! notifyJoin(user.name.toString())
+          }
+        }
       }
     }
-
-
   }
 
   /**
@@ -192,6 +198,7 @@ case class Room(roomId: String) extends Actor {
    * @param reason 理由
    */
   private def abort(steamId: String, reason: String) = {
+    Logger.debug("ABORT")
     val response = AbortResponse(steamId, reason).toJson
     channel.push(response)
   }
