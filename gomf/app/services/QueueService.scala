@@ -80,12 +80,10 @@ object QueueService {
               queueActor ! NotifyMatchingStart(roomId)
               //マップ毎にマッチングに参加
               mapList foreach { mapName =>
-                Logger.debug("map foreach")
                 //マッチングに参加
                 val matchingResult = queue.joinQueue(roomId, mapName, count)
                 //マッチが見つかっていれば
                 if( matchingResult("matchFound").asInstanceOf[Boolean] ) {
-                  Logger.debug("見つかった屋で")
                   //マッチが見つかったことをルームに通知
                   queueActor ! NotifyMatchFound(matchingResult)
                   //該当ルームをマッチングから切断
@@ -222,7 +220,6 @@ class QueueActor extends Actor {
   }
 
   private[this] def notifyMatchFound(matchingResult: immutable.Map[String, Any]) = {
-    Logger.debug("NOTIFY MATCH FOUND")
     val rooms = matchingResult("rooms").asInstanceOf[mutable.Map[String, mutable.Seq[String]]]
     //どちらかのチームに所属しているルームID
     val teams = rooms("team1") union rooms("team2")
