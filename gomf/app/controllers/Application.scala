@@ -25,8 +25,8 @@ object Application extends Controller with ChatService {
    */
   def lobbyWithoutRoomId = Action { implicit request =>
     session.get("steamId") match {
-      //ログインしていない場合トップページへリダイレクト
-      case None => Redirect(routes.Application.index)
+      //ログインしていない場合ログインページへリダイレクト
+      case None => Redirect(routes.Auth.login)
 
       case Some(steamId) => {
         //ルームIDにSteamIDを渡す
@@ -42,8 +42,8 @@ object Application extends Controller with ChatService {
     import play.api.Play.current
 
     session.get("steamId") match {
-      //ログインしていない場合トップページへリダイレクト
-      case None => Redirect(routes.Application.index)
+      //ログインしていない場合ログインページへリダイレクト
+      case None => Redirect(routes.Auth.login)
 
       case Some(steamId) => {
         User.isLoggedIn(steamId) match {
