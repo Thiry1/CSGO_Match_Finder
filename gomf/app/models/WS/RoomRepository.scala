@@ -39,7 +39,7 @@ class RoomRepositoryActor extends Actor with RoomFactory {
    * @param roomId ルームID
    * @return ルーム
    */
-  private def chatRoom(roomId: String) = context.child(roomId) match {
+  private[this] def chatRoom(roomId: String) = context.child(roomId) match {
     case Some(room) => room
     case None => createChatRoom(roomId)
   }
