@@ -48,11 +48,11 @@ class MatchingQueue {
   private[this] def add(roomId: String, playerCount: Int): Unit = {
     //ルームIDがすでに入っていなければキューに追加
     playerCount match {
-      case 1 => this.solo = (this.solo :+ roomId).distinct
-      case 2 => this.duo = (this.duo :+ roomId).distinct
+      case 1 => this.solo   = (this.solo :+ roomId).distinct
+      case 2 => this.duo    = (this.duo :+ roomId).distinct
       case 3 => this.triple = (this.triple :+ roomId).distinct
       case 4 => this.quadra = (this.quadra :+ roomId).distinct
-      case 5 => this.penta = (this.penta :+ roomId).distinct
+      case 5 => this.penta  = (this.penta :+ roomId).distinct
     }
   }
 
