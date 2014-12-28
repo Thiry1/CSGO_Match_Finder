@@ -74,6 +74,8 @@ $(function() {
             //切断したのがこのルームなら
             if( typeof data === 'undefined' || data.roomId === this.roomId ) {
                 window.lobbyWS.onError("マッチングから切断されました");
+                //マップ変更ボタン有効化
+                lobbyWS.mapSelectBtn.attr('disabled', false).removeAttr('disabled').removeClass('disabled');
                 //ボタンを初期状態に戻す
                 window.queue.toggleBtn.text('GO');
             }
@@ -85,6 +87,8 @@ $(function() {
         onMatchingStart: function(data) {
             if( data.roomId === this.roomId ) {
                 window.lobbyWS.notify("マッチングを開始しました");
+                //マップ変更ボタン無効化
+                lobbyWS.mapSelectBtn.attr('disabled', true).addClass('disabled');
                 //ボタンを初期状態に戻す
                 window.queue.toggleBtn.text('CANCEL');
             }

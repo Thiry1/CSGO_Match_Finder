@@ -28,6 +28,10 @@ $(function() {
          */
         textInput: $('#lobbyChatInput').children('input'),
         /**
+         * MAP設定ボタン
+         */
+        mapSelectBtn: $('#mapSettings'),
+        /**
          * コネクション確立時にコールされる
          */
         onConnection: function() {

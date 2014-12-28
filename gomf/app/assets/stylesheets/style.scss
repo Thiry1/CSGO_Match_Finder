@@ -209,6 +209,9 @@ body{
             float:left;
             margin:5px 0 0 0;
             @include btnBlue;
+            &.disabled{
+              @include btnDisabled;
+            }
           }
           .desc{
             float:left;
