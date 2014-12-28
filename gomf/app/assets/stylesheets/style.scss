@@ -16,7 +16,19 @@ body{
   background-attachment: fixed;
   background-size: cover;
 }
-
+#logout{
+  position: absolute;
+  top:0;
+  right:0;
+  width:100px;
+  background:rgba(13, 25, 35, 0.9);
+  a{
+    display: block;
+    color:$baseTextColor;
+    text-align: center;
+    text-decoration: none;
+  }
+}
 .contents{
   width:$pageWidth;
   margin:20px auto 0 auto;
