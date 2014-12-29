@@ -12,8 +12,9 @@ $(function() {
          * queueを開始する
          * @@param playerCount プレイヤー人数
          * @@param maps マップ一覧
+         * @@param steamIds ロビーに参加しているプレイヤーのSteamID一覧
          */
-        start: function(playerCount, maps) {
+        start: function(playerCount, maps, steamIds) {
             if( maps.length === 0 ) {
                 window.lobbyWS.onError("マップが指定されていません");
                 //ボタンを初期状態に戻す
@@ -25,7 +26,8 @@ $(function() {
             socket.send(JSON.stringify({
                 event: "startQueue",
                 playerCount: playerCount,
-                maps: maps
+                maps: maps,
+                steamIds: steamIds
             }));
 
 

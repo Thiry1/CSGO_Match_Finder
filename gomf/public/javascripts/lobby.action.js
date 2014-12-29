@@ -19,6 +19,10 @@ $(function(){
          */
         playerCount: 0,
         /**
+         * プレイヤーのSteamID
+         */
+        steamIds: [],
+        /**
          * queueに参加する人数を変更
          * @param num プレーヤー数
          */
@@ -29,7 +33,7 @@ $(function(){
             this.playerCount = num;
         },
         start: function() {
-            window.queueWS.start(this.playerCount, this.maps);
+            window.queueWS.start(this.playerCount, this.maps, this.steamIds);
         },
         stop: function() {
             window.queueWS.stop();

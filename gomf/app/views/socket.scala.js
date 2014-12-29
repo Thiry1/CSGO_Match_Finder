@@ -163,6 +163,9 @@ $(function() {
             //ルームに接続しているユーザー一覧
             var users = data.user;
 
+            //SteamID一覧
+            var steamIds = [];
+
             //ユーザー一覧をバインド
             for(var i = 0, len = users.length; i < len ; i++) {
               var li = this.playerDisplayArea.eq(i),
@@ -179,9 +182,13 @@ $(function() {
 
               //ユーザー名をバインド
               li.children('.name').text(user.userName);
+
+              steamIds.push(user.steamId);
             }
             //queueのプレーヤー人数を更新
             window.queue.modifyPlayerCount(users.length);
+            //queueのSteamID一覧を更新
+            window.queue.steamIds = steamIds;
         },
         /**
          * ルーム内の誰かが接続時の処理
