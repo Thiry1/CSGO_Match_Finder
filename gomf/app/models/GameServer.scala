@@ -43,8 +43,16 @@ object GameServer {
     play.Play.application.configuration.getConfigList("csgo.servers") foreach { server =>
       val host = server.getString("host")
       val port = server.getInt("port")
+      val svPassword = server.getString("svPassword")
+      val rconPassword = server.getString("rconPassword")
 
-      servers = servers :+ immutable.Map("host" -> host, "port" -> port, "isEmpty" -> isEmpty(host, port))
+      servers = servers :+ immutable.Map(
+        "host" -> host,
+        "port" -> port,
+        "svPassword" -> svPassword,
+        "rconPassword" -> rconPassword,
+        "isEmpty" -> isEmpty(host, port)
+      )
     }
 
     ServerList(servers)
