@@ -63,7 +63,7 @@ object Application extends Controller with ChatService {
                     import scala.collection.JavaConverters._
 
                     val params = immutable.Map ('player -> player, 'roomId -> roomId, 'maps -> maps.asScala.toSeq)
-                    Ok(utils.Scalate.Template ("lobby.jade").render(params) )
+                    Ok( utils.Scalate.Template ("lobby.jade").render(params) )
                   }
                 }
               }
