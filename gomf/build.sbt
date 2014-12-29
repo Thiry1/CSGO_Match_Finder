@@ -15,7 +15,7 @@ libraryDependencies ++= Seq(
   cache,
   "eu.inn" %% "play2memcached" % "0.1",
   "org.fusesource.scalate" %% "scalate-core" % "1.7.0-SNAPSHOT",
-  "com.github.koraktor" % "steam-condenser" % "1.3.8",
+  "com.github.koraktor" % "steam-condenser" % "1.3.8"
 )
 
 playScalaSettings
