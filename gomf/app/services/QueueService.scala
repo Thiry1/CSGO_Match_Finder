@@ -208,8 +208,6 @@ class Queue {
 
 class QueueActor extends Actor {
   val (enumerator, channel) = Concurrent.broadcast[JsValue]
-  //マップごとにキュー用クラスのインスタンスを作成、リスト化する
-
 
   def receive = {
     case JoinQueueService(roomId) => sender ! Connected(enumerator)
