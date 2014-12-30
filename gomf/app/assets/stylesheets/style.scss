@@ -334,7 +334,7 @@ body{
                   background: linear-gradient(to right,  #2f363c 0%,#353d44 51%,#3d454d 100%); /* W3C */
                   .check{
                     position: absolute;
-                    bottom:0;
+                    bottom:3px;
                     right:0;
                     @include CheckBox;
                   }//.check
