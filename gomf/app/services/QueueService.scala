@@ -3,6 +3,7 @@ package services
 import akka.actor._
 import akka.util.Timeout
 import akka.pattern.ask
+import models.GameServer
 import play.api.{Play, Logger}
 
 import play.api.libs.concurrent.Akka
@@ -63,10 +64,21 @@ object QueueService {
    * @param roomId ルームID
    * @param data ユーザーから送られてきたJsonデータ
    */
-  private[this] def startQueue(roomId: String, data: JsValue) = {
+  private[this] def startQueue(roomId: String, data: JsValue): Unit = {
+
+    (data \ "steamIds").asOpt[Seq[String]] match {
+      case Some(steamIds) => {
+        //SteamIDとルームIDを紐付けて保管
+        queue.addRoomData(roomId, steamIds)
+      }
+      case None => {
+        queueActor ! ForceQuitQueue(roomId, "[不正なキュー] SteamIDが指定されていません")
+        return
+      }
+    }
+
     //プレイヤー人数を取得
     val playerCount = (data \ "playerCount").asOpt[Int]
-
     playerCount match {
       case Some(count) if count > 0 => {
         //マップ一覧を取得
@@ -84,23 +96,59 @@ object QueueService {
                 val matchingResult = queue.joinQueue(roomId, mapName, count)
                 //マッチが見つかっていれば
                 if( matchingResult("matchFound").asInstanceOf[Boolean] ) {
-                  //マッチが見つかったことをルームに通知
-                  queueActor ! NotifyMatchFound(matchingResult)
-                  //該当ルームをマッチングから切断
-                  val team1Rooms = matchingResult("team1").asInstanceOf[mutable.Seq[String]]
-                  val team2Rooms = matchingResult("team2").asInstanceOf[mutable.Seq[String]]
-                  queue.removeFromQueue(team1Rooms ++ team2Rooms)
+                  Logger.debug("match found")
+                  //ルームID
+                  val rooms = matchingResult("rooms").asInstanceOf[mutable.Map[String, mutable.Seq[String]]]
+                  val team1Rooms = rooms("team1")
+                  val team2Rooms = rooms("team2")
+
+                  //SteamID一覧取得
+                  val steamIds = queue.getSteamIds(team1Rooms ++ team2Rooms)
+                  Logger.debug("search game server")
+                  //ゲームサーバーの確保
+                  val server = GameServer.reserve(steamIds, mapName)
+                  //サーバーの確保に成功していれば
+                  if( server.nonEmpty ) {
+                    Logger.debug("server found")
+                    //マッチが見つかったことをルームに通知
+                    queueActor ! NotifyMatchFound(
+                      matchingResult,
+                      server("host").toString,
+                      server("port").asInstanceOf[Int],
+                      server("svPassword").toString
+                    )
+                    //該当ルームをマッチングから切断
+                    queue.removeFromQueue(team1Rooms ++ team2Rooms)
+                    //ルームIDに紐付いたSteamID一覧を削除
+                    (team1Rooms ++ team2Rooms) foreach { roomId =>
+                      queue.removeRoomData(roomId)
+                    }
+                  } else {
+                    //サーバーが見つからない場合マッチングから切断させる
+                    (team1Rooms ++ team2Rooms) foreach { roomId =>
+                      queueActor ! ForceQuitQueue(roomId, "マッチは見つかりましたが、空いているサーバーがありませんでした")
+                    }
+                  }
+
                   //マッチが見つかったため以降のマップではマッチング参加処理をしない
                   breaker.break()
                 }
               }
             }
-            case _ => queueActor ! ForceQuitQueue(roomId, "[不正なキュー] mapが指定されていません")
+            case _ => {
+              //ルームIDに紐付いたSteamIDリストを削除
+              queue.removeRoomData(roomId)
+              queueActor ! ForceQuitQueue(roomId, "[不正なキュー] mapが指定されていません")
+            }
           }
         }
 
       }
-      case _ => queueActor ! ForceQuitQueue(roomId, "[不正なキュー] playerCountが不正です")
+      case _ => {
+        //ルームIDに紐付いたSteamIDリストを削除
+        queue.removeRoomData(roomId)
+        queueActor ! ForceQuitQueue(roomId, "[不正なキュー] playerCountが不正です")
+      }
     }
   }
 
@@ -111,26 +159,17 @@ object QueueService {
   private[this] def stopQueue(roomId: String) = {
     //該当ルームをマッチングキューから削除する
     this.queue.removeFromQueue(roomId)
+    //ルームIDに紐付いたSteamIDリストを削除
+    queue.removeRoomData(roomId)
     //該当ルームが切断したことを通知
     queueActor ! NotifyQuitQueue(roomId)
   }
-/*
-  private[this] def verifyMatch(matchingId: String) = {
-    //マッチの検証
-    if( queue.verifyMatch(matchingId) ) {
-      queueActor ! NotifyMatchSuccessful(queue.getMatchedRooms(matchingId))
-      //マッチングIDに紐付いたルームを削除
-      queue.removeMatchedRooms(matchingId)
-    }
-  }
-*/
 }
 
 class Queue {
-  /*//成功したマッチングのマッチIDと検証用数値を格納
-  private[this] val matchIds = mutable.Map.empty[String, Int]
-  //成功したマッチングのマッチIDをキーに、マッチしたルームIDを格納
-  private[this] val matchedRooms = mutable.Map.empty[String, mutable.Seq[String]]*/
+  //ルームIDに紐づけてSteamIDを格納
+  private[this] val steamIdList = mutable.Map.empty[String, Seq[String]]
+
   //マップごとにマッチングクラスのインスタンスを生成する
   private[this] lazy val queueMaps = Play.application.configuration.getStringList("csgo.maps") match {
     case None => immutable.Map.empty[String, MatchingQueue]
@@ -146,6 +185,38 @@ class Queue {
 
       queueList
     }
+  }
+
+  /**
+   * ルームIDリストを元にSteamIDリストを作成する
+   * @param rooms ルームIDリスト
+   * @return SteamIDリスト
+   */
+  def getSteamIds(rooms: mutable.Seq[String]): immutable.Seq[String] = {
+    var steamIds = Seq.empty[String]
+
+    rooms foreach { roomId =>
+      val ids = this.steamIdList(roomId)
+      steamIds = steamIds ++ ids
+    }
+    //immutableにコンバート
+    immutable.Seq(steamIds: _*)
+  }
+  /**
+   * ルームIDをSteamIDリストを紐付けて格納する
+   * @param roomId ルームID
+   * @param steamIds SteamIDリスト
+   */
+  def addRoomData(roomId: String, steamIds: Seq[String]) = {
+    steamIdList.update(roomId, steamIds)
+  }
+
+  /**
+   * ルームIDに紐付いたSteamIDリストを削除する
+   * @param roomId ルームID
+   */
+  def removeRoomData(roomId: String) = {
+    steamIdList.remove(roomId)
   }
 
   /**
@@ -214,10 +285,17 @@ class QueueActor extends Actor {
     case NotifyQuitQueue(roomId) => notifyQuitQueue(roomId)
     case ForceQuitQueue(roomId, reason) => forceQuitQueue(roomId, reason)
     case NotifyMatchingStart(roomId) => notifyMatchingStart(roomId)
-    case NotifyMatchFound(matchingResult) => notifyMatchFound(matchingResult)
+    case NotifyMatchFound(matchingResult, host, port, password) => notifyMatchFound(matchingResult, host, port, password)
   }
 
-  private[this] def notifyMatchFound(matchingResult: immutable.Map[String, Any]) = {
+  /**
+   * マッチが見つかったことをルームに通知する
+   * @param matchingResult マッチング結果
+   * @param host サーバーホスト
+   * @param port サーバーポート
+   * @param password サーバーパスワード
+   */
+  private[this] def notifyMatchFound(matchingResult: immutable.Map[String, Any], host: String, port: Int, password: String) = {
     val rooms = matchingResult("rooms").asInstanceOf[mutable.Map[String, mutable.Seq[String]]]
     //どちらかのチームに所属しているルームID
     val teams = rooms("team1") union rooms("team2")
@@ -225,11 +303,12 @@ class QueueActor extends Actor {
       Seq(
         "event"          -> JsString("matchFound"),
         "members"        -> Json.toJson(teams),
-        "serverAddress"  -> JsString("next.five-seven.net"),
-        "serverport"     -> JsString("27015"),
-        "serverPassword" -> JsString("next")
+        "serverAddress"  -> JsString(host),
+        "serverPort"     -> JsString(port.toString),
+        "serverPassword" -> JsString(password)
       )
     )
+    Logger.debug("PUSH")
     channel.push(msg)
   }
 
@@ -306,5 +385,5 @@ case class NotifyQuitQueue(roomId: String)
 case class ForceQuitQueue(roomId: String, reason: String)
 case class NotifyMatchingStart(roomId: String)
 case class Connected(enumerator: Enumerator[JsValue])
-case class NotifyMatchFound(matchingResult: immutable.Map[String, Any])
+case class NotifyMatchFound(matchingResult: immutable.Map[String, Any], host: String, port: Int, password: String)
 case class NotifyMatchSuccessful(roomIds: mutable.Seq[String])
