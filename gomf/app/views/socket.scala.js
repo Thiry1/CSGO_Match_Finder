@@ -32,6 +32,10 @@ $(function() {
          */
         mapSelectBtn: $('#mapSettings'),
         /**
+         * サーバーとの接続状況
+         */
+        connectionStatus: true,
+        /**
          * コネクション確立時にコールされる
          */
         onConnection: function() {
@@ -44,6 +48,7 @@ $(function() {
          * WebSocket通信切断時にコールされる
          */
         onConnectionClosed: function() {
+            lobbyWS.connectionStatus = false;
             lobbyWS.onError("サーバーとの通信が切断されました。ページを更新して再接続してください");
         },
         /**

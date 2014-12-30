@@ -232,6 +232,11 @@ $(function(){
      * キュー実行開始ボタンクリック時にコールされる
      */
     queue.toggleBtn.on('click', function() {
+        if( !lobbyWS.connectionStatus ) {
+            alert("サーバーとの通信に失敗しました。ページをリロードしてください");
+            return;
+        }
+
         var btn = $(this);
 
         if( btn.text() === 'GO') {
