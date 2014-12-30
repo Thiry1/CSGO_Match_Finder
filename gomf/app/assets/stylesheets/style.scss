@@ -183,6 +183,9 @@ body{
           @include box-sizing;
           overflow-x:hidden;
           overflow-y:scroll;
+          a{
+            color: $baseTextColor;
+          }
           p{
             &.notify{
               color:#0f0;
