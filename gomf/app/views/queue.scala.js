@@ -57,6 +57,9 @@ $(function() {
                 case 'anyoneQuitQueue':
                     queueWS.onDisconnect(data);
                 break;
+                case 'forceQuitQueue':
+                    queueWS.onForceQuit(data);
+                    break;
                 case 'matchFound':
                     queueWS.onMatchFound(data);
                 break;
@@ -66,7 +69,7 @@ $(function() {
          * WebSocket通信切断時にコールされる
          */
         onConnectionClosed: function() {
-            alert("サーバーとの通信が切断されました。ページを更新して再接続してください");
+            window.lobbyWS.onError("サーバーとの通信が切断されました。ページを更新して再接続してください");
         },
         /**
          * ルームが切断された時にコールされる
@@ -76,6 +79,17 @@ $(function() {
             //切断したのがこのルームなら
             if( typeof data === 'undefined' || data.roomId === this.roomId ) {
                 window.lobbyWS.onError("マッチングから切断されました");
+                //マップ変更ボタン有効化
+                lobbyWS.mapSelectBtn.attr('disabled', false).removeAttr('disabled').removeClass('disabled');
+                //ボタンを初期状態に戻す
+                window.queue.toggleBtn.text('GO');
+            }
+        },
+        onForceQuit: function(data) {
+            //切断したのがこのルームなら
+            if( typeof data === 'undefined' || data.roomId === this.roomId ) {
+                window.lobbyWS.onError("マッチングから切断されました");
+                window.lobbyWS.onError(data.reason);
                 //マップ変更ボタン有効化
                 lobbyWS.mapSelectBtn.attr('disabled', false).removeAttr('disabled').removeClass('disabled');
                 //ボタンを初期状態に戻す
@@ -101,10 +115,12 @@ $(function() {
          */
         onMatchFound: function(data) {
             //マッチングしたルーム一覧に自身のルームIDが存在する場合
-            if( data.members.indexOf(this.roomId) ) {
-                window.lobbyWS.notify("マッチが見つかりました");
+            if( data.members.indexOf(this.roomId) != -1 ) {
+                window.lobbyWS.notify('マッチが見つかりました。CONSOLE: connect ' + data.serverAddress + ':' + data.serverPort + ';password ' + data.serverPassword);
                 //ボタンを初期状態に戻す
                 window.queue.toggleBtn.text('GO');
+                //マップ変更ボタン有効化
+                lobbyWS.mapSelectBtn.attr('disabled', false).removeAttr('disabled').removeClass('disabled');
                 //サーバーコネクトを送信
                 location.href = 'steam://connect/' + data.serverAddress + ':' + data.serverPort + '/' + data.serverPassword;
             }
@@ -114,6 +130,8 @@ $(function() {
     socket.onmessage = queueWS.onReceive;
     socket.onclose = queueWS.onConnectionClosed;
     //export
-    window.queueWS = queueWS
+    window.queueWS = queueWS;
 
+    //一部ブラウザで、ページ更新時にボタンの状況が維持されてしまうので強制初期化
+    lobbyWS.mapSelectBtn.attr('disabled', false).removeAttr('disabled').removeClass('disabled');
 });
