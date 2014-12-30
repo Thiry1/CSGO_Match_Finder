@@ -308,7 +308,7 @@ class QueueActor extends Actor {
         "serverPassword" -> JsString(password)
       )
     )
-    Logger.debug("PUSH")
+    Logger.debug("Notify Match Found:: " + msg.toString)
     channel.push(msg)
   }
 

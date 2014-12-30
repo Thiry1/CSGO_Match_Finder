@@ -1,6 +1,7 @@
 package models
 
 import com.github.koraktor.steamcondenser.steam.servers.SourceServer
+import play.api.Logger
 import play.api.Play.current
 import play.api.libs.json._
 
@@ -87,13 +88,14 @@ case class ServerList(servers: immutable.Seq[immutable.Map[String, Any]]) {
    * ゲームサーバー一覧から誰も人がいないサーバーを探し、使用予約する
    * @return サーバーの接続情報
    */
-  def reserve(steamIds: immutable.Seq[String], mapName: String) = {
+  def reserve(steamIds: immutable.Seq[String], mapName: String): immutable.Map[String, Any] = {
     this.synchronized{
       var srv = immutable.Map.empty[String, Any]
       val breaker = scala.util.control.Breaks
 
       breaker.breakable {
         servers foreach { server =>
+          Logger.debug("Server search: " + server.toString)
           if( server("isEmpty").asInstanceOf[Boolean] ) {
             val rcon = new Rcon(server("host").toString, server("port").asInstanceOf[Int], server("rconPassword").toString)
             //サーバーの予約を試みる
@@ -107,6 +109,9 @@ case class ServerList(servers: immutable.Seq[immutable.Map[String, Any]]) {
                 "rconPassword" -> server("rconPassword"),
                 "svPassword"   -> server("svPassword")
               )
+
+              Logger.debug("Server Found: " + srv.toString)
+
               //サーバーの確保に成功したので以降の処理をスキップ
               breaker.break()
             }
@@ -172,12 +177,16 @@ class Rcon(host: String, port: Int, rconPassword: String) {
    * @return 予約成功の場合はtrueを、失敗の場合falseを返す
    */
   def reserveServer(steamIds: immutable.Seq[String]): Boolean = {
+    Logger.debug("try reserve")
     if( rconAuthSuccessful ) {
+      Logger.debug("auth")
       if( isNotReserved ) {
+        Logger.debug("empty")
         //サーバーを予約するコマンドを生成
         val command = "gomf_reserve " + steamIds.mkString(" ")
         val status = exec(command)
         if( status == "[GOMF] reserve successful") {
+          Logger.debug("success")
           //予約成功ならば
           true
         } else {
