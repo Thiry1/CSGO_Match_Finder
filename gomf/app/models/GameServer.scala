@@ -100,9 +100,9 @@ case class ServerList(servers: immutable.Seq[immutable.Map[String, Any]]) {
             val rcon = new Rcon(server("host").toString, server("port").asInstanceOf[Int], server("rconPassword").toString)
             //サーバーの予約を試みる
             if( rcon.reserveServer(steamIds) ) {
+              Logger.debug("changelevel to " + mapName)
               //マップを変更
               rcon.changelevel(mapName)
-
               srv = immutable.Map(
                 "host"         -> server("host"),
                 "port"         -> server("port"),
@@ -147,7 +147,7 @@ class Rcon(host: String, port: Int, rconPassword: String) {
    */
   def isNotReserved: Boolean = {
     if( rconAuthSuccessful ) {
-      val reservedStatus = exec("gomf_get_reserve_status")
+      val reservedStatus = exec("gomf_get_reserve_status").getOrElse("")
       //予約ステータスが空きならば
       if( reservedStatus == "[GOMF] Server is Free" ) {
         true
@@ -165,11 +165,13 @@ class Rcon(host: String, port: Int, rconPassword: String) {
    * @param command RCONコマンド
    * @return レスポンス
    */
-  def exec(command: String): String = {
+  def exec(command: String): Option[String] = {
     //コマンド実行
     val response = server.rconExec(command)
-    //レスポンスから不要な文字列を排除する
-    (response lines ).toSeq(0)
+
+    val lines = response.lines
+    //レスポンスから不要な文字列を排除してもどす
+    if( lines.length != 0 ) Some(lines.toSeq(0)) else None
   }
 
   /**
@@ -177,16 +179,12 @@ class Rcon(host: String, port: Int, rconPassword: String) {
    * @return 予約成功の場合はtrueを、失敗の場合falseを返す
    */
   def reserveServer(steamIds: immutable.Seq[String]): Boolean = {
-    Logger.debug("try reserve")
     if( rconAuthSuccessful ) {
-      Logger.debug("auth")
       if( isNotReserved ) {
-        Logger.debug("empty")
         //サーバーを予約するコマンドを生成
         val command = "gomf_reserve " + steamIds.mkString(" ")
-        val status = exec(command)
+        val status = exec(command).getOrElse("")
         if( status == "[GOMF] reserve successful") {
-          Logger.debug("success")
           //予約成功ならば
           true
         } else {
@@ -202,7 +200,7 @@ class Rcon(host: String, port: Int, rconPassword: String) {
 
   def freeServer: Boolean = {
     if( rconAuthSuccessful ) {
-      val status = exec("gomf_free")
+      val status = exec("gomf_free").getOrElse("")
       if( status == "[GOMF] free successful" ) {
         true
       } else {
