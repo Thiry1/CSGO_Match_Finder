@@ -198,6 +198,9 @@ class Rcon(host: String, port: Int, rconPassword: String) {
     }
   }
 
+  /**
+   * サーバーの予約状態を開放する
+   */
   def freeServer: Boolean = {
     if( rconAuthSuccessful ) {
       val status = exec("gomf_free").getOrElse("")
@@ -210,7 +213,10 @@ class Rcon(host: String, port: Int, rconPassword: String) {
       false
     }
   }
-
+  /**
+   * マップを変更する
+   * @param mapName マップ名
+   */
   def changelevel(mapName: String) = {
     if( rconAuthSuccessful ) {
       exec("changelevel de_" + mapName)
