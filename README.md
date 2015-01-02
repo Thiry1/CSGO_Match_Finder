@@ -17,7 +17,7 @@ Sourcemod 1.6.4
 =================
 application.confの以下の項目の設定をしてください  
 **steam.apiKey**には http://steamcommunity.com/dev/apikey で取得したAPI keyを記述してください  
-**memcached.hosts**にはあなたのmemcachedサーバーの接続先を指定してください
+**memcached.hosts**にはあなたのmemcachedサーバーの接続先を指定してください  
 **csgo.maps**にはマッチング対象のマップを記述してください  
 **csgo.servers**にはマッチング対象のゲームサーバーを指定してください
 
