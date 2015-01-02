@@ -77,7 +77,8 @@ $(function() {
          */
         onDisconnect: function(data) {
             //切断したのがこのルームなら
-            if( typeof data === 'undefined' || data.roomId === this.roomId ) {
+            if( ( typeof data === 'undefined' || data.roomId === this.roomId )
+                && window.queue.toggleBtn.text() === 'CANCEL' ) {
                 window.lobbyWS.onError("マッチングから切断されました");
                 //マップ変更ボタン有効化
                 lobbyWS.mapSelectBtn.attr('disabled', false).removeAttr('disabled').removeClass('disabled');
