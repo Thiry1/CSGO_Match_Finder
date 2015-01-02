@@ -33,18 +33,18 @@ html(lang="ja")
           section
             header
               h1 Friends
-              #onlines 20 Online
+              #onlines 0 Online
             .friendsListBox
               ul#friendsList
-                - for(i <- 1 to 20){
+                - for(i <- 1 to 1){
                 li
                   .player
                     .thumb
                       img(src="#{player.avatar}" width="60" height="60")
                     ////.thumb
                     .desc
-                      .name Thiry
-                      .status Online
+                      .name currently disabled
+                      .status
                     ////.desc
                   ////.player
                 - }
@@ -90,13 +90,13 @@ html(lang="ja")
     ul#userMenu
       li#steamProfLinker
         a(href="javascript:void(0)" target="_blank") Steamプロフィール
-      li#inviteFriend ルームに招待
-      li#inviteChat チャット送信
+      //li#inviteFriend ルームに招待
+      //li#inviteChat チャット送信
     ////.userMenu
     ul#lobbyMenu
       li#steamProfLinker
         a(href="javascript:void(0)" target="_blank") Steamプロフィール
-      li#kickBtn ロビーからKick
+      //li#kickBtn ロビーからKick
     ////.lobbyMenu
     #mapSelector
       .box
