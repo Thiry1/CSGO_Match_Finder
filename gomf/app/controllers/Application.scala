@@ -17,7 +17,7 @@ import services.{ChatService, QueueService}
 object Application extends Controller with ChatService {
 
   def index = Action {
-    Ok(views.html.index("Your new application is ready."))
+    Redirect(routes.Application.lobbyWithoutRoomId)
   }
 
   /**
