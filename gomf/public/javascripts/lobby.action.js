@@ -243,7 +243,6 @@ $(function(){
             btn.text('CANCEL');
             queue.start();
         } else {
-            btn.text('GO');
             queue.stop();
         }
 
