@@ -168,10 +168,14 @@ class Rcon(host: String, port: Int, rconPassword: String) {
   def exec(command: String): Option[String] = {
     //コマンド実行
     val response = server.rconExec(command)
-
-    val lines = response.lines
-    //レスポンスから不要な文字列を排除してもどす
-    if( lines.length != 0 ) Some(lines.toSeq(0)) else None
+    Logger.debug("RESPONSE:: " + response)
+    if( response.isEmpty ) {
+      None
+    } else {
+      val lines = response.lines.toList
+      //レスポンスから不要な文字列を排除してもどす
+      if( lines.nonEmpty ) Some( lines.head ) else None
+    }
   }
 
   /**
