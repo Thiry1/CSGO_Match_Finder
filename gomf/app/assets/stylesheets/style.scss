@@ -93,7 +93,8 @@ body{
       .friendsListBox{
         #friendsList{
           overflow-x:hidden;
-          overflow-y:scroll;
+          //overflow-y:scroll;
+          overflow-y:hidden;
           li{
             border-bottom: 1px #12171c solid;
             .player{
