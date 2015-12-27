@@ -148,13 +148,8 @@ class Rcon(host: String, port: Int, rconPassword: String) {
   def isNotReserved: Boolean = {
     if( rconAuthSuccessful ) {
       val reservedStatus = exec("gomf_get_reserve_status").getOrElse("")
-      //予約ステータスが空きならば
-      if( reservedStatus == "[GOMF] Server is Free" ) {
-        true
-      } else {
-        //サーバーが予約済みならば
-        false
-      }
+      //予約ステータス
+      reservedStatus == "[GOMF] Server is Free"
     } else {
       false
     }
@@ -174,7 +169,7 @@ class Rcon(host: String, port: Int, rconPassword: String) {
     } else {
       val lines = response.lines.toList
       //レスポンスから不要な文字列を排除してもどす
-      if( lines.nonEmpty ) Some( lines.head ) else None
+      lines.headOption
     }
   }
 
@@ -188,12 +183,8 @@ class Rcon(host: String, port: Int, rconPassword: String) {
         //サーバーを予約するコマンドを生成
         val command = "gomf_reserve " + steamIds.mkString(" ")
         val status = exec(command).getOrElse("")
-        if( status == "[GOMF] reserve successful") {
-          //予約成功ならば
-          true
-        } else {
-          false
-        }
+        //予約成功しているか
+        status == "[GOMF] reserve successful"
       } else {
         false
       }
@@ -208,11 +199,7 @@ class Rcon(host: String, port: Int, rconPassword: String) {
   def freeServer: Boolean = {
     if( rconAuthSuccessful ) {
       val status = exec("gomf_free").getOrElse("")
-      if( status == "[GOMF] free successful" ) {
-        true
-      } else {
-        false
-      }
+      status == "[GOMF] free successful"
     } else {
       false
     }
