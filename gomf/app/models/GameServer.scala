@@ -24,11 +24,7 @@ object GameServer {
       server.initialize()
 
       //サーバー接続人数が0ならばtrueを返す
-      if( server.getServerInfo().get("numberOfPlayers").toString == "0" ) {
-        true
-      } else {
-        false
-      }
+      server.getServerInfo().get("numberOfPlayers").toString == "0"
     } catch {
       case _: Throwable => false
     }
