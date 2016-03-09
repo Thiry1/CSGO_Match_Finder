@@ -23,7 +23,7 @@ object SteamAPI {
   def userInfo(steamId: String): Future[Player] = {
     //SteamAPIのURL
     val holder : WSRequestHolder = play.api.libs.ws.WS.url("http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/")
-                                     .withQueryString(("key" -> STEAM_API_KEY), ("steamids" -> steamId))
+                                     .withQueryString(("key" -> STEAM_API_KEY), ("steamids" -> steamId), ("format" -> "json"))
 
     holder.get().map { response =>
       //JSONからプレーヤーデータ配列のみ取り出し
