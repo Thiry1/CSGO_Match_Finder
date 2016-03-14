@@ -16,7 +16,7 @@ html(lang="ja")
     link(rel="stylesheet" href="/assets/stylesheets/style.css")
   body
     #logout
-      a(href="/auth/logout") ログアウト
+      a(href="/auth/logout") Logout
     .contents
       .tabs
         .playerInfo
@@ -67,16 +67,15 @@ html(lang="ja")
             //#players
             #lobbyChat(data-roomId="#{roomId}")
               #view
-                p バグや不具合等の報告は<a href="https://twitter.com/thiry_creative" target="_blank">@thiry_creative</a>へお願いします
-                p ゲームサーバーへ自動接続するためにはCS:GOを起動しておく必要があります(起動しておかないとbad passwordになります)
+                p You MUST launch 'CS:GO' before matching. If not, auto game server connecting function will not work
               ////#view
               form#lobbyChatInput
-                input(type="text" placeholder="メッセージを入力してEnterキーで送信")
+                input(type="text" placeholder="Press the Enter key to send message")
               ////form
             ////#lobbyChat
             #buttonControls
               .ctl
-                button#mapSettings MAP設定
+                button#mapSettings MAP SELECT
                 .desc#selectedMapsList
               ////.ctl
               .go
@@ -89,20 +88,20 @@ html(lang="ja")
     ////.contents
     ul#userMenu
       li#steamProfLinker
-        a(href="javascript:void(0)" target="_blank") Steamプロフィール
+        a(href="javascript:void(0)" target="_blank") Steam profile
       //li#inviteFriend ルームに招待
       //li#inviteChat チャット送信
     ////.userMenu
     ul#lobbyMenu
       li#steamProfLinker
-        a(href="javascript:void(0)" target="_blank") Steamプロフィール
+        a(href="javascript:void(0)" target="_blank") Steam profile
       //li#kickBtn ロビーからKick
     ////.lobbyMenu
     #mapSelector
       .box
         .window
           section.inner
-            header MAP選択
+            header MAP SELECT
             #mapList
               ul#classicMap
                 - for( map <- maps) {
@@ -124,7 +123,7 @@ html(lang="ja")
               ////ul
             ////#mapList
             footer
-              button#mapOK(type="submit") 決定
+              button#mapOK(type="submit") Confirm
             //footer
           ////.inner
         ////.window

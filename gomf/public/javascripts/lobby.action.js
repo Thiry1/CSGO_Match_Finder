@@ -233,7 +233,7 @@ $(function(){
      */
     queue.toggleBtn.on('click', function() {
         if( !lobbyWS.connectionStatus ) {
-            alert("サーバーとの通信に失敗しました。ページをリロードしてください");
+            alert("Disconnect from server. Please refresh the page to reconnect");
             return;
         }
 

@@ -16,7 +16,7 @@ $(function() {
          */
         start: function(playerCount, maps, steamIds) {
             if( maps.length === 0 ) {
-                window.lobbyWS.onError("マップが指定されていません");
+                window.lobbyWS.onError("Map has not selected.");
                 //ボタンを初期状態に戻す
                 window.queue.toggleBtn.text('GO');
                 return;
@@ -69,7 +69,7 @@ $(function() {
          * WebSocket通信切断時にコールされる
          */
         onConnectionClosed: function() {
-            window.lobbyWS.onError("サーバーとの通信が切断されました。ページを更新して再接続してください");
+            window.lobbyWS.onError("Disconnect from server. Please refresh the page to reconnect");
         },
         /**
          * ルームが切断された時にコールされる
@@ -79,7 +79,7 @@ $(function() {
             //切断したのがこのルームなら
             if( ( typeof data === 'undefined' || data.roomId === this.roomId )
                 && window.queue.toggleBtn.text() === 'CANCEL' ) {
-                window.lobbyWS.onError("マッチングから切断されました");
+                window.lobbyWS.onError("Matching has stopped.");
                 //マップ変更ボタン有効化
                 lobbyWS.mapSelectBtn.attr('disabled', false).removeAttr('disabled').removeClass('disabled');
                 //ボタンを初期状態に戻す
@@ -89,7 +89,7 @@ $(function() {
         onForceQuit: function(data) {
             //切断したのがこのルームなら
             if( typeof data === 'undefined' || data.roomId === this.roomId ) {
-                window.lobbyWS.onError("マッチングから切断されました");
+                window.lobbyWS.onError("Matching has stopped.");
                 window.lobbyWS.onError(data.reason);
                 //マップ変更ボタン有効化
                 lobbyWS.mapSelectBtn.attr('disabled', false).removeAttr('disabled').removeClass('disabled');
@@ -103,7 +103,7 @@ $(function() {
          */
         onMatchingStart: function(data) {
             if( data.roomId === this.roomId ) {
-                window.lobbyWS.notify("マッチングを開始しました");
+                window.lobbyWS.notify("Matching has started.");
                 //マップ変更ボタン無効化
                 lobbyWS.mapSelectBtn.attr('disabled', true).addClass('disabled');
                 //ボタンを初期状態に戻す
@@ -117,7 +117,7 @@ $(function() {
         onMatchFound: function(data) {
             //マッチングしたルーム一覧に自身のルームIDが存在する場合
             if( data.members.indexOf(this.roomId) != -1 ) {
-                window.lobbyWS.notify('マッチが見つかりました。CONSOLE: connect ' + data.serverAddress + ':' + data.serverPort + ';password ' + data.serverPassword);
+                window.lobbyWS.notify('MATCH FOUND! CONSOLE: connect ' + data.serverAddress + ':' + data.serverPort + ';password ' + data.serverPassword);
                 //ボタンを初期状態に戻す
                 window.queue.toggleBtn.text('GO');
                 //マップ変更ボタン有効化

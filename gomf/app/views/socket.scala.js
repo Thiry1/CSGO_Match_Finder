@@ -49,7 +49,7 @@ $(function() {
          */
         onConnectionClosed: function() {
             lobbyWS.connectionStatus = false;
-            lobbyWS.onError("サーバーとの通信が切断されました。ページを更新して再接続してください");
+            lobbyWS.onError("Disconnect from server. Please refresh the page to reconnect");
         },
         /**
          * メッセージの送信
@@ -151,7 +151,7 @@ $(function() {
             if( data.steamId === this.steamId ) {
                 lobbyWS.onError(data.reason);
                 socket.close();
-                alert("ルームから切断されました。reason: " + data.reason);
+                alert("Disconnect from the room.reason: " + data.reason);
             }
         },
         /**
@@ -200,14 +200,14 @@ $(function() {
          * @@param data
          */
         onJoined: function(data) {
-            lobbyWS.notify(data.userName + " さんが接続しました");
+            lobbyWS.notify(data.userName + " has connected");
         },
         /**
          * ルーム内の誰かが切断時の処理
          * @@param data
          */
         onDisconnect: function(data) {
-            lobbyWS.notify(data.userName + " さんが切断しました");
+            lobbyWS.notify(data.userName + " has disconnected");
         },
         notify: function(text) {
             var textElement = $('<p class="notify"></p>');
