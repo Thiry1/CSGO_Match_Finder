@@ -23,8 +23,10 @@ object GameServer {
       val server: SourceServer = new SourceServer(host, port)
       server.initialize()
 
+      //BOTを除くプレイヤーの数
+      val humanPlayerCount = server.getServerInfo().get("numberOfPlayers").asInstanceOf[Byte] - server.getServerInfo().get("numberOfBots").asInstanceOf[Byte]
       //サーバー接続人数が0ならばtrueを返す
-      server.getServerInfo().get("numberOfPlayers").toString == "0"
+      humanPlayerCount == 0
     } catch {
       case _: Throwable => false
     }
